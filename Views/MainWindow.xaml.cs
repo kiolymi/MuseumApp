@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
 using MuseumApp.Helpers;
@@ -21,10 +22,40 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        HookDataGridColumnGeneration();
         Title = $"ИС Музейный комплекс — Добро пожаловать, {SessionUser.Login}";
         ApplyRoleVisibility();
         ConfigureActionButtons();
         Load();
+    }
+
+    private void HookDataGridColumnGeneration()
+    {
+        foreach (var grid in new DataGrid[]
+        {
+            dg_exhibitions, dg_exhibits, dg_collections, dg_halls, dg_authors,
+            dg_visitors, dg_exhibitionTickets, dg_excursionTickets, dg_excursions,
+            dg_privileges, dg_employees, dg_events
+        })
+        {
+            grid.AutoGeneratingColumn += DataGrid_AutoGeneratingColumn;
+        }
+    }
+
+    private static void DataGrid_AutoGeneratingColumn(object? sender, DataGridAutoGeneratingColumnEventArgs e)
+    {
+        var type = Nullable.GetUnderlyingType(e.PropertyType) ?? e.PropertyType;
+        if (type == typeof(string)
+            || type.IsPrimitive
+            || type == typeof(decimal)
+            || type == typeof(DateTime)
+            || type == typeof(DateOnly)
+            || type == typeof(TimeOnly))
+        {
+            return;
+        }
+
+        e.Cancel = true;
     }
 
     public void Load()
