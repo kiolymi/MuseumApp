@@ -136,6 +136,9 @@ public partial class MainWindow : Window
             }
         }
 
+        dpTicketFrom.SelectedDate = new DateTime(2024, 1, 1);
+        dpTicketTo.SelectedDate = new DateTime(2024, 12, 31);
+
         Load();
     }
 

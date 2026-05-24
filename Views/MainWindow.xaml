@@ -145,6 +145,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <DataGrid x:Name="dg_exhibitionTickets" Grid.Row="0"
                               AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
@@ -155,6 +156,16 @@
                         </DataGrid.ContextMenu>
                     </DataGrid>
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
+                        <Label Content="От:" VerticalAlignment="Center"/>
+                        <DatePicker x:Name="dpTicketFrom" Width="130" Margin="4,0,12,0"/>
+                        <Label Content="До:" VerticalAlignment="Center"/>
+                        <DatePicker x:Name="dpTicketTo" Width="130" Margin="4,0,12,0"/>
+                        <Button x:Name="btn_find_tickets" Content="Найти"
+                                Height="32" MinWidth="100" Click="btn_find_tickets_Click"/>
+                        <Button x:Name="btn_show_all_tickets" Content="Показать все"
+                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_show_all_tickets_Click"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,0">
                         <Button x:Name="btn_add_exhibitionTickets" Content="Добавить"
                                 Height="32" MinWidth="120" Click="btn_add_exhibitionTickets_Click"/>
                         <Button x:Name="btn_change_exhibitionTickets" Content="Изменить"
