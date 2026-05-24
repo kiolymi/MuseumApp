@@ -1,0 +1,49 @@
+<Window x:Class="MuseumApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="ИС Музейный комплекс"
+        ResizeMode="CanResize">
+    <Grid Margin="12">
+        <TabControl x:Name="mainTabs">
+            <TabItem x:Name="tabExhibitions" Header="Выставки">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabExhibits" Header="Экспонаты">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabCollections" Header="Коллекции">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabHalls" Header="Залы">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabAuthors" Header="Авторы">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabVisitors" Header="Посетители">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabExhibitionTickets" Header="Билеты на выставки">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabExcursionTickets" Header="Билеты на экскурсии">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabExcursions" Header="Экскурсии">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabPrivileges" Header="Льготы">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabEmployees" Header="Сотрудники">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="tabEvents" Header="Мероприятия">
+                <Grid/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
