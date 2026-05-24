@@ -12,16 +12,24 @@ public partial class AddExhibitionTicketWindow : Window
         InitializeComponent();
         dpVisitDate.SelectedDate = DateTime.Today;
 
-        var context = new MuseumDbContext();
-        cmbVisitor.ItemsSource = context.Visitors
-            .Select(v => new { Id = v.IdVisitor, Name = $"{v.LastName} {v.FirstName} {v.MiddleName}" })
-            .ToList();
-        cmbExhibition.ItemsSource = context.Exhibitions
-            .Select(e => new { Id = e.IdExhibition, Name = e.ExhibitionName })
-            .ToList();
+        try
+        {
+            var context = new MuseumDbContext();
+            cmbVisitor.ItemsSource = context.Visitors
+                .Select(v => new { Id = v.IdVisitor, Name = $"{v.LastName} {v.FirstName} {v.MiddleName}" })
+                .ToList();
+            cmbExhibition.ItemsSource = context.Exhibitions
+                .Select(e => new { Id = e.IdExhibition, Name = e.ExhibitionName })
+                .ToList();
 
-        if (cmbVisitor.Items.Count > 0) cmbVisitor.SelectedIndex = 0;
-        if (cmbExhibition.Items.Count > 0) cmbExhibition.SelectedIndex = 0;
+            if (cmbVisitor.Items.Count > 0) cmbVisitor.SelectedIndex = 0;
+            if (cmbExhibition.Items.Count > 0) cmbExhibition.SelectedIndex = 0;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Ошибка загрузки: " + ex.Message);
+            Close();
+        }
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)

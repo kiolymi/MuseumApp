@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Employees;
 
@@ -19,11 +20,7 @@ public partial class EditEmployeeWindow : Window
         txtEducation.Text = selected.EducationLevel ?? "";
         dpBirthDate.SelectedDate = selected.BirthDate.ToDateTime(TimeOnly.MinValue);
 
-        var context = new MuseumDbContext();
-        cmbPosition.ItemsSource = context.Positions
-            .Select(p => new { Id = p.IdPosition, Name = p.PositionName })
-            .ToList();
-        cmbPosition.SelectedValue = selected.IdPosition;
+        ComboLoadHelper.LoadPositions(cmbPosition, selected.IdPosition);
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)

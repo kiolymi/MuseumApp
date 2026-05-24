@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Events;
 
@@ -19,15 +20,8 @@ public partial class EditEventWindow : Window
         txtDuration.Text = selected.DurationMinutes.ToString();
         txtPrice.Text = selected.Price.ToString();
 
-        var context = new MuseumDbContext();
-        cmbBranch.ItemsSource = context.Branches
-            .Select(b => new { Id = b.IdBranch, Name = b.BranchName })
-            .ToList();
-        cmbEmployee.ItemsSource = context.Employees
-            .Select(e => new { Id = e.IdEmployee, Name = $"{e.LastName} {e.FirstName}" })
-            .ToList();
-        cmbBranch.SelectedValue = selected.IdBranch;
-        cmbEmployee.SelectedValue = selected.IdEmployee;
+        ComboLoadHelper.LoadBranches(cmbBranch, selected.IdBranch);
+        ComboLoadHelper.LoadEmployees(cmbEmployee, selected.IdEmployee);
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)

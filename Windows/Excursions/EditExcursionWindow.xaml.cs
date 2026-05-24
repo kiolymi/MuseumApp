@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Excursions;
 
@@ -15,20 +16,23 @@ public partial class EditExcursionWindow : Window
         txtDuration.Text = selected.Duration.ToString();
         txtPrice.Text = selected.Price.ToString();
 
-        var context = new MuseumDbContext();
-        cmbExhibition.ItemsSource = context.Exhibitions
-            .Select(e => new { Id = e.IdExhibition, Name = e.ExhibitionName })
-            .ToList();
-        cmbGuide.ItemsSource = context.Employees
-            .Select(e => new { Id = e.IdEmployee, Name = $"{e.LastName} {e.FirstName}" })
-            .ToList();
-        cmbCustomer.ItemsSource = context.Visitors
-            .Select(v => new { Id = v.IdVisitor, Name = $"{v.LastName} {v.FirstName}" })
-            .ToList();
+        try
+        {
+            var context = new MuseumDbContext();
+            cmbExhibition.ItemsSource = context.Exhibitions
+                .Select(e => new { Id = e.IdExhibition, Name = e.ExhibitionName })
+                .ToList();
+            cmbExhibition.SelectedValue = selected.IdExhibition;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Ошибка загрузки выставок: " + ex.Message);
+            Close();
+            return;
+        }
 
-        cmbExhibition.SelectedValue = selected.IdExhibition;
-        cmbGuide.SelectedValue = selected.IdGuide;
-        cmbCustomer.SelectedValue = selected.IdCustomer;
+        ComboLoadHelper.LoadEmployees(cmbGuide, selected.IdGuide);
+        ComboLoadHelper.LoadVisitors(cmbCustomer, selected.IdCustomer);
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)

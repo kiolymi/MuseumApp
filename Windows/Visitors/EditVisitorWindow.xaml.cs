@@ -18,13 +18,21 @@ public partial class EditVisitorWindow : Window
         txtPhone.Text = selected.Phone ?? "";
         txtEmail.Text = selected.Email ?? "";
 
-        var context = new MuseumDbContext();
-        var privileges = context.Privileges
-            .Select(p => new { Id = (int?)p.IdPrivilege, Name = p.PrivilegeName })
-            .ToList();
-        privileges.Insert(0, new { Id = (int?)null, Name = "(без льготы)" });
-        cmbPrivilege.ItemsSource = privileges;
-        cmbPrivilege.SelectedValue = selected.IdPrivilege;
+        try
+        {
+            var context = new MuseumDbContext();
+            var privileges = context.Privileges
+                .Select(p => new { Id = (int?)p.IdPrivilege, Name = p.PrivilegeName })
+                .ToList();
+            privileges.Insert(0, new { Id = (int?)null, Name = "(без льготы)" });
+            cmbPrivilege.ItemsSource = privileges;
+            cmbPrivilege.SelectedValue = selected.IdPrivilege;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Ошибка загрузки: " + ex.Message);
+            Close();
+        }
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)

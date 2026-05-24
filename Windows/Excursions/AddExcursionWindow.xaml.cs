@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Excursions;
 
@@ -10,20 +11,29 @@ public partial class AddExcursionWindow : Window
     {
         InitializeComponent();
 
-        var context = new MuseumDbContext();
-        cmbExhibition.ItemsSource = context.Exhibitions
-            .Select(e => new { Id = e.IdExhibition, Name = e.ExhibitionName })
-            .ToList();
-        cmbGuide.ItemsSource = context.Employees
-            .Select(e => new { Id = e.IdEmployee, Name = $"{e.LastName} {e.FirstName}" })
-            .ToList();
-        cmbCustomer.ItemsSource = context.Visitors
-            .Select(v => new { Id = v.IdVisitor, Name = $"{v.LastName} {v.FirstName}" })
-            .ToList();
+        try
+        {
+            var context = new MuseumDbContext();
+            cmbExhibition.ItemsSource = context.Exhibitions
+                .Select(e => new { Id = e.IdExhibition, Name = e.ExhibitionName })
+                .ToList();
+            if (cmbExhibition.Items.Count > 0) cmbExhibition.SelectedIndex = 0;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Ошибка загрузки выставок: " + ex.Message);
+            Close();
+            return;
+        }
 
-        if (cmbExhibition.Items.Count > 0) cmbExhibition.SelectedIndex = 0;
-        if (cmbGuide.Items.Count > 0) cmbGuide.SelectedIndex = 0;
-        if (cmbCustomer.Items.Count > 0) cmbCustomer.SelectedIndex = 0;
+        if (!ComboLoadHelper.TryLoadEmployeesForAdd(cmbGuide))
+        {
+            Close();
+            return;
+        }
+
+        if (!ComboLoadHelper.TryLoadVisitorsForAdd(cmbCustomer))
+            Close();
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)

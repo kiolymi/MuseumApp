@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Authors;
 
@@ -16,11 +17,7 @@ public partial class EditAuthorWindow : Window
         txtFirstName.Text = selected.FirstName;
         txtMiddleName.Text = selected.MiddleName ?? "";
 
-        var context = new MuseumDbContext();
-        cmbCountry.ItemsSource = context.Countries
-            .Select(c => new { Id = c.IdCountry, Name = c.CountryName })
-            .ToList();
-        cmbCountry.SelectedValue = selected.IdCountry;
+        ComboLoadHelper.LoadCountries(cmbCountry, selected.IdCountry);
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)

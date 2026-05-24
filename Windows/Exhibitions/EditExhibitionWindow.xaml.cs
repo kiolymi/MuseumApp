@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Exhibitions;
 
@@ -18,11 +19,7 @@ public partial class EditExhibitionWindow : Window
         txtPrice.Text = selected.Price.ToString();
         txtTheme.Text = selected.Theme ?? "";
 
-        var context = new MuseumDbContext();
-        cmbCurator.ItemsSource = context.Employees
-            .Select(e => new { Id = e.IdEmployee, Name = $"{e.LastName} {e.FirstName} {e.MiddleName}" })
-            .ToList();
-        cmbCurator.SelectedValue = selected.IdCurator;
+        ComboLoadHelper.LoadEmployees(cmbCurator, selected.IdCurator);
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)

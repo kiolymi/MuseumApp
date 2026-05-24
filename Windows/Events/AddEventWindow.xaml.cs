@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Events;
 
@@ -12,16 +13,14 @@ public partial class AddEventWindow : Window
         InitializeComponent();
         dpEventDate.SelectedDate = DateTime.Today;
 
-        var context = new MuseumDbContext();
-        cmbBranch.ItemsSource = context.Branches
-            .Select(b => new { Id = b.IdBranch, Name = b.BranchName })
-            .ToList();
-        cmbEmployee.ItemsSource = context.Employees
-            .Select(e => new { Id = e.IdEmployee, Name = $"{e.LastName} {e.FirstName}" })
-            .ToList();
+        if (!ComboLoadHelper.TryLoadBranchesForAdd(cmbBranch))
+        {
+            Close();
+            return;
+        }
 
-        if (cmbBranch.Items.Count > 0) cmbBranch.SelectedIndex = 0;
-        if (cmbEmployee.Items.Count > 0) cmbEmployee.SelectedIndex = 0;
+        if (!ComboLoadHelper.TryLoadEmployeesForAdd(cmbEmployee))
+            Close();
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)

@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Collections;
 
@@ -9,12 +10,8 @@ public partial class AddCollectionWindow : Window
     public AddCollectionWindow()
     {
         InitializeComponent();
-        var context = new MuseumDbContext();
-        cmbKeeper.ItemsSource = context.Employees
-            .Select(e => new { Id = e.IdEmployee, Name = $"{e.LastName} {e.FirstName} {e.MiddleName}" })
-            .ToList();
-        if (cmbKeeper.Items.Count > 0)
-            cmbKeeper.SelectedIndex = 0;
+        if (!ComboLoadHelper.TryLoadEmployeesForAdd(cmbKeeper))
+            Close();
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)

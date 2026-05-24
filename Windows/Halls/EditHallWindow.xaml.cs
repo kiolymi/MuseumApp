@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Halls;
 
@@ -16,11 +17,7 @@ public partial class EditHallWindow : Window
         txtArea.Text = selected.Area?.ToString() ?? "";
         txtCapacity.Text = selected.Capacity?.ToString() ?? "";
 
-        var context = new MuseumDbContext();
-        cmbBranch.ItemsSource = context.Branches
-            .Select(b => new { Id = b.IdBranch, Name = b.BranchName })
-            .ToList();
-        cmbBranch.SelectedValue = selected.IdBranch;
+        ComboLoadHelper.LoadBranches(cmbBranch, selected.IdBranch);
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)

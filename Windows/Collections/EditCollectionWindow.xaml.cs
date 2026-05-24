@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Collections;
 
@@ -15,11 +16,7 @@ public partial class EditCollectionWindow : Window
         txtName.Text = selected.CollectionName;
         txtDescription.Text = selected.Description;
 
-        var context = new MuseumDbContext();
-        cmbKeeper.ItemsSource = context.Employees
-            .Select(e => new { Id = e.IdEmployee, Name = $"{e.LastName} {e.FirstName} {e.MiddleName}" })
-            .ToList();
-        cmbKeeper.SelectedValue = selected.IdKeeper;
+        ComboLoadHelper.LoadEmployees(cmbKeeper, selected.IdKeeper);
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)

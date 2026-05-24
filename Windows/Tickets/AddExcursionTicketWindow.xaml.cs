@@ -12,16 +12,24 @@ public partial class AddExcursionTicketWindow : Window
         InitializeComponent();
         dpVisitDate.SelectedDate = DateTime.Today;
 
-        var context = new MuseumDbContext();
-        cmbVisitor.ItemsSource = context.Visitors
-            .Select(v => new { Id = v.IdVisitor, Name = $"{v.LastName} {v.FirstName} {v.MiddleName}" })
-            .ToList();
-        cmbExcursion.ItemsSource = context.Excursions
-            .Select(e => new { Id = e.IdExcursion, Name = $"Экскурсия #{e.IdExcursion}" })
-            .ToList();
+        try
+        {
+            var context = new MuseumDbContext();
+            cmbVisitor.ItemsSource = context.Visitors
+                .Select(v => new { Id = v.IdVisitor, Name = $"{v.LastName} {v.FirstName} {v.MiddleName}" })
+                .ToList();
+            cmbExcursion.ItemsSource = context.Excursions
+                .Select(e => new { Id = e.IdExcursion, Name = $"Экскурсия #{e.IdExcursion}" })
+                .ToList();
 
-        if (cmbVisitor.Items.Count > 0) cmbVisitor.SelectedIndex = 0;
-        if (cmbExcursion.Items.Count > 0) cmbExcursion.SelectedIndex = 0;
+            if (cmbVisitor.Items.Count > 0) cmbVisitor.SelectedIndex = 0;
+            if (cmbExcursion.Items.Count > 0) cmbExcursion.SelectedIndex = 0;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Ошибка загрузки: " + ex.Message);
+            Close();
+        }
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)

@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Employees;
 
@@ -11,12 +12,8 @@ public partial class AddEmployeeWindow : Window
         InitializeComponent();
         dpBirthDate.SelectedDate = DateTime.Today.AddYears(-30);
 
-        var context = new MuseumDbContext();
-        cmbPosition.ItemsSource = context.Positions
-            .Select(p => new { Id = p.IdPosition, Name = p.PositionName })
-            .ToList();
-        if (cmbPosition.Items.Count > 0)
-            cmbPosition.SelectedIndex = 0;
+        if (!ComboLoadHelper.TryLoadPositionsForAdd(cmbPosition))
+            Close();
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)

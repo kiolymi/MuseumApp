@@ -9,21 +9,28 @@ public partial class AddExhibitWindow : Window
     public AddExhibitWindow()
     {
         InitializeComponent();
-        dpCreationDate.SelectedDate = DateTime.Today;
 
-        var context = new MuseumDbContext();
-        cmbCollection.ItemsSource = context.Collections
-            .Select(c => new { Id = c.IdCollection, Name = c.CollectionName })
-            .ToList();
-        cmbAuthor.ItemsSource = context.Authors
-            .Select(a => new { Id = (int?)a.IdAuthor, Name = $"{a.LastName} {a.FirstName}" })
-            .ToList();
-        cmbCondition.ItemsSource = context.ExhibitConditions
-            .Select(c => new { Id = c.IdCondition, Name = c.ConditionName })
-            .ToList();
-
-        if (cmbCollection.Items.Count > 0) cmbCollection.SelectedIndex = 0;
-        if (cmbCondition.Items.Count > 0) cmbCondition.SelectedIndex = 0;
+        try
+        {
+            var context = new MuseumDbContext();
+            cmbCollection.ItemsSource = context.Collections
+                .Select(c => new { Id = c.IdCollection, Name = c.CollectionName })
+                .ToList();
+            cmbAuthor.ItemsSource = context.Authors
+                .Select(a => new { Id = (int?)a.IdAuthor, Name = $"{a.LastName} {a.FirstName}" })
+                .ToList();
+            cmbCondition.ItemsSource = context.ExhibitConditions
+                .Select(c => new { Id = c.IdCondition, Name = c.ConditionName })
+                .ToList();
+            if (cmbCollection.Items.Count > 0) cmbCollection.SelectedIndex = 0;
+            if (cmbAuthor.Items.Count > 0) cmbAuthor.SelectedIndex = 0;
+            if (cmbCondition.Items.Count > 0) cmbCondition.SelectedIndex = 0;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Ошибка загрузки: " + ex.Message);
+            Close();
+        }
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)

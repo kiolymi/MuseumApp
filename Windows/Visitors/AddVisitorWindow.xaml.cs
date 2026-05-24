@@ -9,13 +9,22 @@ public partial class AddVisitorWindow : Window
     public AddVisitorWindow()
     {
         InitializeComponent();
-        var context = new MuseumDbContext();
-        var privileges = context.Privileges
-            .Select(p => new { Id = (int?)p.IdPrivilege, Name = p.PrivilegeName })
-            .ToList();
-        privileges.Insert(0, new { Id = (int?)null, Name = "(без льготы)" });
-        cmbPrivilege.ItemsSource = privileges;
-        cmbPrivilege.SelectedIndex = 0;
+
+        try
+        {
+            var context = new MuseumDbContext();
+            var privileges = context.Privileges
+                .Select(p => new { Id = (int?)p.IdPrivilege, Name = p.PrivilegeName })
+                .ToList();
+            privileges.Insert(0, new { Id = (int?)null, Name = "(без льготы)" });
+            cmbPrivilege.ItemsSource = privileges;
+            cmbPrivilege.SelectedIndex = 0;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Ошибка загрузки: " + ex.Message);
+            Close();
+        }
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)

@@ -16,20 +16,28 @@ public partial class EditExhibitWindow : Window
         if (selected.CreationDate.HasValue)
             dpCreationDate.SelectedDate = selected.CreationDate.Value.ToDateTime(TimeOnly.MinValue);
 
-        var context = new MuseumDbContext();
-        cmbCollection.ItemsSource = context.Collections
-            .Select(c => new { Id = c.IdCollection, Name = c.CollectionName })
-            .ToList();
-        cmbAuthor.ItemsSource = context.Authors
-            .Select(a => new { Id = (int?)a.IdAuthor, Name = $"{a.LastName} {a.FirstName}" })
-            .ToList();
-        cmbCondition.ItemsSource = context.ExhibitConditions
-            .Select(c => new { Id = c.IdCondition, Name = c.ConditionName })
-            .ToList();
+        try
+        {
+            var context = new MuseumDbContext();
+            cmbCollection.ItemsSource = context.Collections
+                .Select(c => new { Id = c.IdCollection, Name = c.CollectionName })
+                .ToList();
+            cmbAuthor.ItemsSource = context.Authors
+                .Select(a => new { Id = (int?)a.IdAuthor, Name = $"{a.LastName} {a.FirstName}" })
+                .ToList();
+            cmbCondition.ItemsSource = context.ExhibitConditions
+                .Select(c => new { Id = c.IdCondition, Name = c.ConditionName })
+                .ToList();
 
-        cmbCollection.SelectedValue = selected.IdCollection;
-        cmbAuthor.SelectedValue = selected.IdAuthor;
-        cmbCondition.SelectedValue = selected.IdCondition;
+            cmbCollection.SelectedValue = selected.IdCollection;
+            cmbAuthor.SelectedValue = selected.IdAuthor;
+            cmbCondition.SelectedValue = selected.IdCondition;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Ошибка загрузки: " + ex.Message);
+            Close();
+        }
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)

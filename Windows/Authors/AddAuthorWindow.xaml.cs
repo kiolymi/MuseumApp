@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Authors;
 
@@ -9,12 +10,8 @@ public partial class AddAuthorWindow : Window
     public AddAuthorWindow()
     {
         InitializeComponent();
-        var context = new MuseumDbContext();
-        cmbCountry.ItemsSource = context.Countries
-            .Select(c => new { Id = c.IdCountry, Name = c.CountryName })
-            .ToList();
-        if (cmbCountry.Items.Count > 0)
-            cmbCountry.SelectedIndex = 0;
+        if (!ComboLoadHelper.TryLoadCountriesForAdd(cmbCountry))
+            Close();
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)

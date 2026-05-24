@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Halls;
 
@@ -9,12 +10,8 @@ public partial class AddHallWindow : Window
     public AddHallWindow()
     {
         InitializeComponent();
-        var context = new MuseumDbContext();
-        cmbBranch.ItemsSource = context.Branches
-            .Select(b => new { Id = b.IdBranch, Name = b.BranchName })
-            .ToList();
-        if (cmbBranch.Items.Count > 0)
-            cmbBranch.SelectedIndex = 0;
+        if (!ComboLoadHelper.TryLoadBranchesForAdd(cmbBranch))
+            Close();
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)

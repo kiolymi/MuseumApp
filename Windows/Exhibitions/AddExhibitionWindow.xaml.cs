@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Exhibitions;
 
@@ -12,12 +13,8 @@ public partial class AddExhibitionWindow : Window
         dpStart.SelectedDate = DateTime.Today;
         dpEnd.SelectedDate = DateTime.Today.AddDays(7);
 
-        var context = new MuseumDbContext();
-        cmbCurator.ItemsSource = context.Employees
-            .Select(e => new { Id = e.IdEmployee, Name = $"{e.LastName} {e.FirstName} {e.MiddleName}" })
-            .ToList();
-        if (cmbCurator.Items.Count > 0)
-            cmbCurator.SelectedIndex = 0;
+        if (!ComboLoadHelper.TryLoadEmployeesForAdd(cmbCurator))
+            Close();
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)
