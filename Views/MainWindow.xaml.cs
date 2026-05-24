@@ -142,6 +142,17 @@ public partial class MainWindow : Window
         Load();
     }
 
+    private void btnLogout_Click(object sender, RoutedEventArgs e)
+    {
+        SessionUser.Login = "";
+        SessionUser.Password = "";
+        SessionUser.Role = "";
+
+        var login = new LoginWindow();
+        login.Show();
+        Close();
+    }
+
     private static void DataGrid_AutoGeneratingColumn(object? sender, DataGridAutoGeneratingColumnEventArgs e)
     {
         var type = Nullable.GetUnderlyingType(e.PropertyType) ?? e.PropertyType;

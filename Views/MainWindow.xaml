@@ -7,7 +7,11 @@
         Title="ИС Музейный комплекс"
         ResizeMode="CanResize">
     <Grid Margin="12">
-        <TabControl x:Name="mainTabs">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TabControl x:Name="mainTabs" Grid.Row="0">
             <TabItem x:Name="tabExhibitions" Header="Выставки">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -283,6 +287,9 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-        </TabControl>
+  </TabControl>
+        <Button x:Name="btnLogout" Grid.Row="1" Content="Выйти"
+                Height="32" MinWidth="120" Margin="0,8,0,0"
+                HorizontalAlignment="Right" Click="btnLogout_Click"/>
     </Grid>
 </Window>
