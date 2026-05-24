@@ -10,98 +10,158 @@
         <TabControl x:Name="mainTabs">
             <TabItem x:Name="tabExhibitions" Header="Выставки">
                 <Grid>
-                    <DataGrid x:Name="dg_exhibitions"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_exhibitions" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_exhibitions" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_exhibitions_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabExhibits" Header="Экспонаты">
                 <Grid>
-                    <DataGrid x:Name="dg_exhibits"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_exhibits" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_exhibits" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_exhibits_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabCollections" Header="Коллекции">
                 <Grid>
-                    <DataGrid x:Name="dg_collections"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_collections" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_collections" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_collections_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabHalls" Header="Залы">
                 <Grid>
-                    <DataGrid x:Name="dg_halls"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_halls" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_halls" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_halls_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabAuthors" Header="Авторы">
                 <Grid>
-                    <DataGrid x:Name="dg_authors"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_authors" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_authors" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_authors_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabVisitors" Header="Посетители">
                 <Grid>
-                    <DataGrid x:Name="dg_visitors"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_visitors" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_visitors" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_visitors_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabExhibitionTickets" Header="Билеты на выставки">
                 <Grid>
-                    <DataGrid x:Name="dg_exhibitionTickets"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_exhibitionTickets" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_exhibitionTickets" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_exhibitionTickets_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabExcursionTickets" Header="Билеты на экскурсии">
                 <Grid>
-                    <DataGrid x:Name="dg_excursionTickets"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_excursionTickets" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_excursionTickets" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_excursionTickets_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabExcursions" Header="Экскурсии">
                 <Grid>
-                    <DataGrid x:Name="dg_excursions"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_excursions" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_excursions" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_excursions_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabPrivileges" Header="Льготы">
                 <Grid>
-                    <DataGrid x:Name="dg_privileges"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_privileges" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_privileges" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_privileges_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabEmployees" Header="Сотрудники">
                 <Grid>
-                    <DataGrid x:Name="dg_employees"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_employees" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_employees" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_employees_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabEvents" Header="Мероприятия">
                 <Grid>
-                    <DataGrid x:Name="dg_events"
-                              AutoGenerateColumns="True"
-                              IsReadOnly="True"
-                              CanUserAddRows="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="dg_events" Grid.Row="0"
+                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False"/>
+                    <Button x:Name="btn_add_events" Grid.Row="1" Content="Добавить"
+                            Margin="0,8,0,0" Height="32" HorizontalAlignment="Left" MinWidth="120"
+                            Click="btn_add_events_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
