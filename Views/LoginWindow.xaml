@@ -5,10 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="ИС Музейный комплекс — вход"
-        Height="320" Width="420"
-        WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
-    <Grid Margin="24">
+        ResizeMode="CanResize">
+    <Grid Margin="24" VerticalAlignment="Center" HorizontalAlignment="Center" Width="380">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
