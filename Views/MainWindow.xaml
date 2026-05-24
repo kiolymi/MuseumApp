@@ -9,40 +9,100 @@
     <Grid Margin="12">
         <TabControl x:Name="mainTabs">
             <TabItem x:Name="tabExhibitions" Header="Выставки">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_exhibitions"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabExhibits" Header="Экспонаты">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_exhibits"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabCollections" Header="Коллекции">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_collections"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabHalls" Header="Залы">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_halls"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabAuthors" Header="Авторы">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_authors"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabVisitors" Header="Посетители">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_visitors"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabExhibitionTickets" Header="Билеты на выставки">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_exhibitionTickets"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabExcursionTickets" Header="Билеты на экскурсии">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_excursionTickets"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabExcursions" Header="Экскурсии">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_excursions"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabPrivileges" Header="Льготы">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_privileges"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabEmployees" Header="Сотрудники">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_employees"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="tabEvents" Header="Мероприятия">
-                <Grid/>
+                <Grid>
+                    <DataGrid x:Name="dg_events"
+                              AutoGenerateColumns="True"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"/>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
