@@ -1,5 +1,6 @@
 using System.Windows;
 using MuseumApp.Data;
+using MuseumApp.Data.Entities;
 using MuseumApp.Helpers;
 using MuseumApp.Windows.Authors;
 using MuseumApp.Windows.Collections;
@@ -22,7 +23,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         Title = $"ИС Музейный комплекс — Добро пожаловать, {SessionUser.Login}";
         ApplyRoleVisibility();
-        ConfigureAddButtons();
+        ConfigureActionButtons();
         Load();
     }
 
@@ -73,45 +74,58 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ConfigureAddButtons()
+    private void ConfigureActionButtons()
     {
-        HideAllAddButtons();
+        HideAllActionButtons();
 
         switch (SessionUser.Role)
         {
             case "admin_museum":
-                ShowAddButtons(
-                    btn_add_exhibitions, btn_add_exhibits, btn_add_collections, btn_add_halls, btn_add_authors,
-                    btn_add_visitors, btn_add_exhibitionTickets, btn_add_excursionTickets, btn_add_excursions,
-                    btn_add_privileges, btn_add_employees, btn_add_events);
+                ShowActionButtons(
+                    btn_add_exhibitions, btn_change_exhibitions, btn_add_exhibits, btn_change_exhibits,
+                    btn_add_collections, btn_change_collections, btn_add_halls, btn_change_halls,
+                    btn_add_authors, btn_change_authors, btn_add_visitors, btn_change_visitors,
+                    btn_add_exhibitionTickets, btn_change_exhibitionTickets,
+                    btn_add_excursionTickets, btn_change_excursionTickets,
+                    btn_add_excursions, btn_change_excursions, btn_add_privileges, btn_change_privileges,
+                    btn_add_employees, btn_change_employees, btn_add_events, btn_change_events);
                 break;
 
             case "curator_museum":
-                ShowAddButtons(
-                    btn_add_exhibitions, btn_add_exhibits, btn_add_collections, btn_add_halls, btn_add_authors);
+                ShowActionButtons(
+                    btn_add_exhibitions, btn_change_exhibitions, btn_add_exhibits, btn_change_exhibits,
+                    btn_add_collections, btn_change_collections, btn_add_halls, btn_change_halls,
+                    btn_add_authors, btn_change_authors);
                 break;
 
             case "cashier_museum":
-                ShowAddButtons(
-                    btn_add_visitors, btn_add_exhibitionTickets, btn_add_excursionTickets, btn_add_privileges);
+                ShowActionButtons(
+                    btn_add_visitors, btn_change_visitors,
+                    btn_add_exhibitionTickets, btn_change_exhibitionTickets,
+                    btn_add_excursionTickets, btn_change_excursionTickets,
+                    btn_add_privileges, btn_change_privileges);
                 break;
         }
     }
 
-    private void HideAllAddButtons()
+    private void HideAllActionButtons()
     {
-        foreach (var button in new[]
+        foreach (var button in new UIElement[]
         {
-            btn_add_exhibitions, btn_add_exhibits, btn_add_collections, btn_add_halls, btn_add_authors,
-            btn_add_visitors, btn_add_exhibitionTickets, btn_add_excursionTickets, btn_add_excursions,
-            btn_add_privileges, btn_add_employees, btn_add_events
+            btn_add_exhibitions, btn_change_exhibitions, btn_add_exhibits, btn_change_exhibits,
+            btn_add_collections, btn_change_collections, btn_add_halls, btn_change_halls,
+            btn_add_authors, btn_change_authors, btn_add_visitors, btn_change_visitors,
+            btn_add_exhibitionTickets, btn_change_exhibitionTickets,
+            btn_add_excursionTickets, btn_change_excursionTickets,
+            btn_add_excursions, btn_change_excursions, btn_add_privileges, btn_change_privileges,
+            btn_add_employees, btn_change_employees, btn_add_events, btn_change_events
         })
         {
             button.Visibility = Visibility.Collapsed;
         }
     }
 
-    private static void ShowAddButtons(params UIElement[] buttons)
+    private static void ShowActionButtons(params UIElement[] buttons)
     {
         foreach (var button in buttons)
         {
@@ -237,6 +251,90 @@ public partial class MainWindow : Window
             Load();
             MessageBox.Show("Мероприятие добавлено");
         }
+    }
+
+    private void btn_change_exhibitions_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_exhibitions.SelectedItem is not Exhibition selected) return;
+        var w = new EditExhibitionWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_exhibits_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_exhibits.SelectedItem is not Exhibit selected) return;
+        var w = new EditExhibitWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_collections_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_collections.SelectedItem is not Collection selected) return;
+        var w = new EditCollectionWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_halls_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_halls.SelectedItem is not Hall selected) return;
+        var w = new EditHallWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_authors_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_authors.SelectedItem is not Author selected) return;
+        var w = new EditAuthorWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_visitors_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_visitors.SelectedItem is not Visitor selected) return;
+        var w = new EditVisitorWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_exhibitionTickets_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_exhibitionTickets.SelectedItem is not ExhibitionTicket selected) return;
+        var w = new EditExhibitionTicketWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_excursionTickets_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_excursionTickets.SelectedItem is not ExcursionTicket selected) return;
+        var w = new EditExcursionTicketWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_excursions_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_excursions.SelectedItem is not Excursion selected) return;
+        var w = new EditExcursionWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_privileges_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_privileges.SelectedItem is not Privilege selected) return;
+        var w = new EditPrivilegeWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_employees_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_employees.SelectedItem is not Employee selected) return;
+        var w = new EditEmployeeWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
+    }
+
+    private void btn_change_events_Click(object sender, RoutedEventArgs e)
+    {
+        if (dg_events.SelectedItem is not Event selected) return;
+        var w = new EditEventWindow(selected) { Owner = this };
+        if (w.ShowDialog() == true) Load();
     }
 
     private void ApplyRoleVisibility()

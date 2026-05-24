@@ -1,0 +1,27 @@
+<Window x:Class="MuseumApp.Windows.Privileges.EditPrivilegeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Изменить льготу" Height="260" Width="480"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Название:"/>
+        <TextBox x:Name="txtName" Grid.Row="0" Grid.Column="1" Margin="0,0,0,8"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Скидка (%):"/>
+        <TextBox x:Name="txtDiscount" Grid.Row="1" Grid.Column="1" Margin="0,0,0,8"/>
+
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Сохранить"
+                Height="32" Click="btnSave_Click"/>
+    </Grid>
+</Window>

@@ -1,0 +1,38 @@
+<Window x:Class="MuseumApp.Windows.Tickets.EditExhibitionTicketWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Изменить билет на выставку" Height="320" Width="480"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Посетитель ID:"/>
+        <TextBlock x:Name="lblVisitor" Grid.Row="0" Grid.Column="1" Margin="0,0,0,8" VerticalAlignment="Center"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Выставка ID:"/>
+        <TextBlock x:Name="lblExhibition" Grid.Row="1" Grid.Column="1" Margin="0,0,0,8" VerticalAlignment="Center"/>
+
+        <Label Grid.Row="2" Grid.Column="0" Content="Дата визита:"/>
+        <DatePicker x:Name="dpVisitDate" Grid.Row="2" Grid.Column="1" Margin="0,0,0,8"/>
+
+        <Label Grid.Row="3" Grid.Column="0" Content="Время (ЧЧ:ММ):"/>
+        <TextBox x:Name="txtVisitTime" Grid.Row="3" Grid.Column="1" Margin="0,0,0,8"/>
+
+        <Label Grid.Row="4" Grid.Column="0" Content="Стоимость:"/>
+        <TextBox x:Name="txtActualCost" Grid.Row="4" Grid.Column="1" Margin="0,0,0,8"/>
+
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="Сохранить"
+                Height="32" Click="btnSave_Click"/>
+    </Grid>
+</Window>
