@@ -46,8 +46,8 @@ public partial class EditExcursionWindow : Window
             item.IdExhibition = (int)cmbExhibition.SelectedValue;
             item.IdGuide = (int)cmbGuide.SelectedValue;
             item.IdCustomer = (int)cmbCustomer.SelectedValue;
-            item.Duration = Convert.ToInt32(txtDuration.Text);
-            item.Price = Convert.ToDecimal(txtPrice.Text);
+            item.Duration = InputHelper.ParseInt(txtDuration.Text);
+            item.Price = InputHelper.ParseDecimal(txtPrice.Text);
 
             context.SaveChanges();
             DialogResult = true;

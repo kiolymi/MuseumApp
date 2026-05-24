@@ -36,8 +36,8 @@ public partial class AddEventWindow : Window
                 IdEmployee = (int)cmbEmployee.SelectedValue,
                 EventDate = DateOnly.FromDateTime(dpEventDate.SelectedDate ?? DateTime.Today),
                 StartTime = startTime,
-                DurationMinutes = Convert.ToInt32(txtDuration.Text),
-                Price = Convert.ToDecimal(txtPrice.Text)
+                DurationMinutes = InputHelper.ParseInt(txtDuration.Text),
+                Price = InputHelper.ParseDecimal(txtPrice.Text)
             };
             context.Events.Add(ev);
             context.SaveChanges();

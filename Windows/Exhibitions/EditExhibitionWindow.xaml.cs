@@ -33,7 +33,7 @@ public partial class EditExhibitionWindow : Window
             item.ExhibitionName = txtName.Text;
             item.StartDate = dpStart.SelectedDate ?? item.StartDate;
             item.EndDate = dpEnd.SelectedDate ?? item.EndDate;
-            item.Price = Convert.ToDecimal(txtPrice.Text);
+            item.Price = InputHelper.ParseDecimal(txtPrice.Text);
             item.Theme = string.IsNullOrWhiteSpace(txtTheme.Text) ? null : txtTheme.Text;
             item.IdCurator = (int)cmbCurator.SelectedValue;
 

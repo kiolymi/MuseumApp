@@ -46,8 +46,8 @@ public partial class AddExcursionWindow : Window
                 IdExhibition = (int)cmbExhibition.SelectedValue,
                 IdGuide = (int)cmbGuide.SelectedValue,
                 IdCustomer = (int)cmbCustomer.SelectedValue,
-                Duration = Convert.ToInt32(txtDuration.Text),
-                Price = Convert.ToDecimal(txtPrice.Text)
+                Duration = InputHelper.ParseInt(txtDuration.Text),
+                Price = InputHelper.ParseDecimal(txtPrice.Text)
             };
             context.Excursions.Add(excursion);
             context.SaveChanges();

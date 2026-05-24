@@ -30,8 +30,8 @@ public partial class EditHallWindow : Window
 
             item.HallName = txtName.Text;
             item.IdBranch = (int)cmbBranch.SelectedValue;
-            item.Area = string.IsNullOrWhiteSpace(txtArea.Text) ? null : Convert.ToDouble(txtArea.Text);
-            item.Capacity = string.IsNullOrWhiteSpace(txtCapacity.Text) ? null : Convert.ToInt32(txtCapacity.Text);
+            item.Area = InputHelper.ParseNullableDouble(txtArea.Text);
+            item.Capacity = InputHelper.ParseNullableInt(txtCapacity.Text);
 
             context.SaveChanges();
             DialogResult = true;

@@ -22,9 +22,11 @@ public partial class EditExhibitWindow : Window
             cmbCollection.ItemsSource = context.Collections
                 .Select(c => new { Id = c.IdCollection, Name = c.CollectionName })
                 .ToList();
-            cmbAuthor.ItemsSource = context.Authors
-                .Select(a => new { Id = (int?)a.IdAuthor, Name = $"{a.LastName} {a.FirstName}" })
+            var authors = context.Authors
+                .Select(a => new { Id = (int?)a.IdAuthor, Name = $"{a.LastName} {a.FirstName}".Trim() })
                 .ToList();
+            authors.Insert(0, new { Id = (int?)null, Name = "—" });
+            cmbAuthor.ItemsSource = authors;
             cmbCondition.ItemsSource = context.ExhibitConditions
                 .Select(c => new { Id = c.IdCondition, Name = c.ConditionName })
                 .ToList();

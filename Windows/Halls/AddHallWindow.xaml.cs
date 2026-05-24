@@ -24,7 +24,7 @@ public partial class AddHallWindow : Window
                 HallName = txtName.Text,
                 IdBranch = (int)cmbBranch.SelectedValue,
                 Area = string.IsNullOrWhiteSpace(txtArea.Text) ? null : Convert.ToDouble(txtArea.Text),
-                Capacity = string.IsNullOrWhiteSpace(txtCapacity.Text) ? null : Convert.ToInt32(txtCapacity.Text)
+                Capacity = InputHelper.ParseNullableInt(txtCapacity.Text)
             };
             context.Halls.Add(hall);
             context.SaveChanges();

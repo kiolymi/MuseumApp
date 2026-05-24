@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Tickets;
 
@@ -33,7 +34,7 @@ public partial class EditExcursionTicketWindow : Window
 
             item.VisitDate = DateOnly.FromDateTime(dpVisitDate.SelectedDate ?? DateTime.Today);
             item.VisitTime = visitTime;
-            item.ActualCost = Convert.ToDecimal(txtActualCost.Text);
+            item.ActualCost = InputHelper.ParseDecimal(txtActualCost.Text);
 
             context.SaveChanges();
             DialogResult = true;

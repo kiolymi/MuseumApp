@@ -38,8 +38,8 @@ public partial class EditEventWindow : Window
             item.IdEmployee = (int)cmbEmployee.SelectedValue;
             item.EventDate = DateOnly.FromDateTime(dpEventDate.SelectedDate ?? DateTime.Today);
             item.StartTime = startTime;
-            item.DurationMinutes = Convert.ToInt32(txtDuration.Text);
-            item.Price = Convert.ToDecimal(txtPrice.Text);
+            item.DurationMinutes = InputHelper.ParseInt(txtDuration.Text);
+            item.Price = InputHelper.ParseDecimal(txtPrice.Text);
 
             context.SaveChanges();
             DialogResult = true;

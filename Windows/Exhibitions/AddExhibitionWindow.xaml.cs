@@ -28,7 +28,7 @@ public partial class AddExhibitionWindow : Window
                 ExhibitionName = txtName.Text,
                 StartDate = dpStart.SelectedDate ?? DateTime.Today,
                 EndDate = dpEnd.SelectedDate ?? DateTime.Today,
-                Price = Convert.ToDecimal(txtPrice.Text),
+                Price = InputHelper.ParseDecimal(txtPrice.Text),
                 Theme = string.IsNullOrWhiteSpace(txtTheme.Text) ? null : txtTheme.Text,
                 IdCurator = (int)cmbCurator.SelectedValue
             };
