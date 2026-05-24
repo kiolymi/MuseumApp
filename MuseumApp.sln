@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuseumApp", "MuseumApp.csproj", "{4CF173DB-A04C-4DF7-A3C8-C7116A870D5F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4CF173DB-A04C-4DF7-A3C8-C7116A870D5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CF173DB-A04C-4DF7-A3C8-C7116A870D5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CF173DB-A04C-4DF7-A3C8-C7116A870D5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CF173DB-A04C-4DF7-A3C8-C7116A870D5F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {978811EE-9A7E-482B-AD5E-51D56E63AC40}
+	EndGlobalSection
+EndGlobal
