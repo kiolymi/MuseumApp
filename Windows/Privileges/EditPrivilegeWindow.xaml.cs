@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Privileges;
 
@@ -20,14 +21,25 @@ public partial class EditPrivilegeWindow : Window
     {
         try
         {
+            var discount = string.IsNullOrWhiteSpace(txtDiscount.Text)
+                ? null
+                : InputHelper.ParseNullableDouble(txtDiscount.Text);
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtName.Text, "Название"),
+                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
+                ValidationHelper.DiscountPercent(discount));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var context = new MuseumDbContext();
             var item = context.Privileges.Find(_id);
             if (item == null) return;
 
-            item.PrivilegeName = txtName.Text;
-            item.DiscountRate = string.IsNullOrWhiteSpace(txtDiscount.Text)
-                ? null
-                : Convert.ToDouble(txtDiscount.Text);
+            item.PrivilegeName = txtName.Text.Trim();
+            item.DiscountRate = discount;
 
             context.SaveChanges();
             DialogResult = true;
@@ -35,7 +47,7 @@ public partial class EditPrivilegeWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

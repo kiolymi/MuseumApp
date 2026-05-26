@@ -27,17 +27,33 @@ public partial class AddEventWindow : Window
     {
         try
         {
+            var duration = InputHelper.ParseInt(txtDuration.Text);
+            var price = InputHelper.ParseDecimal(txtPrice.Text);
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtName.Text, "Название"),
+                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
+                ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал"),
+                ValidationHelper.Combo(cmbEmployee.SelectedValue, "Сотрудник"),
+                ValidationHelper.VisitDate(dpEventDate.SelectedDate),
+                ValidationHelper.Positive(duration, "Длительность"),
+                ValidationHelper.NonNegative(price, "Цена"));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var startTime = TimeOnly.Parse(txtStartTime.Text.Trim(), CultureInfo.InvariantCulture);
             var context = new MuseumDbContext();
             var ev = new Event
             {
-                EventName = txtName.Text,
-                IdBranch = (int)cmbBranch.SelectedValue,
-                IdEmployee = (int)cmbEmployee.SelectedValue,
-                EventDate = DateOnly.FromDateTime(dpEventDate.SelectedDate ?? DateTime.Today),
+                EventName = txtName.Text.Trim(),
+                IdBranch = (int)cmbBranch.SelectedValue!,
+                IdEmployee = (int)cmbEmployee.SelectedValue!,
+                EventDate = DateOnly.FromDateTime(dpEventDate.SelectedDate!.Value),
                 StartTime = startTime,
-                DurationMinutes = InputHelper.ParseInt(txtDuration.Text),
-                Price = InputHelper.ParseDecimal(txtPrice.Text)
+                DurationMinutes = duration,
+                Price = price
             };
             context.Events.Add(ev);
             context.SaveChanges();
@@ -46,7 +62,7 @@ public partial class AddEventWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

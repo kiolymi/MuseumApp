@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Exhibits;
 
@@ -37,7 +38,7 @@ public partial class EditExhibitWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Ошибка загрузки: " + ex.Message);
+            DbErrorHelper.Show(ex);
             Close();
         }
     }
@@ -46,14 +47,25 @@ public partial class EditExhibitWindow : Window
     {
         try
         {
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtName.Text, "Название"),
+                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
+                ValidationHelper.Combo(cmbCollection.SelectedValue, "Коллекция"),
+                ValidationHelper.Combo(cmbCondition.SelectedValue, "Состояние"));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var context = new MuseumDbContext();
             var item = context.Exhibits.Find(_id);
             if (item == null) return;
 
-            item.Name = txtName.Text;
-            item.IdCollection = (int)cmbCollection.SelectedValue;
+            item.Name = txtName.Text.Trim();
+            item.IdCollection = (int)cmbCollection.SelectedValue!;
             item.IdAuthor = cmbAuthor.SelectedValue as int?;
-            item.IdCondition = (int)cmbCondition.SelectedValue;
+            item.IdCondition = (int)cmbCondition.SelectedValue!;
             item.CreationDate = dpCreationDate.SelectedDate.HasValue
                 ? DateOnly.FromDateTime(dpCreationDate.SelectedDate.Value)
                 : null;
@@ -64,7 +76,7 @@ public partial class EditExhibitWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

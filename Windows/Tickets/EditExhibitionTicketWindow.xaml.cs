@@ -28,6 +28,16 @@ public partial class EditExhibitionTicketWindow : Window
     {
         try
         {
+            var cost = InputHelper.ParseDecimal(txtActualCost.Text);
+            var error = ValidationHelper.First(
+                ValidationHelper.VisitDate(dpVisitDate.SelectedDate),
+                ValidationHelper.NonNegative(cost, "Стоимость"));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var visitTime = TimeOnly.Parse(txtVisitTime.Text.Trim(), CultureInfo.InvariantCulture);
             var context = new MuseumDbContext();
             var item = context.ExhibitionTickets.Find(_idExhibition, _idVisitor);
@@ -35,7 +45,7 @@ public partial class EditExhibitionTicketWindow : Window
 
             item.VisitDate = DateOnly.FromDateTime(dpVisitDate.SelectedDate ?? DateTime.Today);
             item.VisitTime = visitTime;
-            item.ActualCost = InputHelper.ParseDecimal(txtActualCost.Text);
+            item.ActualCost = cost;
 
             context.SaveChanges();
             DialogResult = true;
@@ -43,7 +53,7 @@ public partial class EditExhibitionTicketWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

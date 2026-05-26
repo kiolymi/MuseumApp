@@ -24,14 +24,27 @@ public partial class EditHallWindow : Window
     {
         try
         {
+            var capacity = InputHelper.ParseNullableInt(txtCapacity.Text);
+            var area = InputHelper.ParseNullableDouble(txtArea.Text);
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtName.Text, "Название"),
+                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
+                ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал"),
+                capacity.HasValue ? ValidationHelper.Positive(capacity.Value, "Вместимость") : null);
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var context = new MuseumDbContext();
             var item = context.Halls.Find(_id);
             if (item == null) return;
 
-            item.HallName = txtName.Text;
-            item.IdBranch = (int)cmbBranch.SelectedValue;
-            item.Area = InputHelper.ParseNullableDouble(txtArea.Text);
-            item.Capacity = InputHelper.ParseNullableInt(txtCapacity.Text);
+            item.HallName = txtName.Text.Trim();
+            item.IdBranch = (int)cmbBranch.SelectedValue!;
+            item.Area = area;
+            item.Capacity = capacity;
 
             context.SaveChanges();
             DialogResult = true;
@@ -39,7 +52,7 @@ public partial class EditHallWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

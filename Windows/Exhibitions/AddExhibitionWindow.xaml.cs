@@ -21,16 +21,30 @@ public partial class AddExhibitionWindow : Window
     {
         try
         {
+            var price = InputHelper.ParseDecimal(txtPrice.Text);
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtName.Text, "Название"),
+                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
+                ValidationHelper.Dates(dpStart.SelectedDate, dpEnd.SelectedDate),
+                ValidationHelper.Combo(cmbCurator.SelectedValue, "Куратор"),
+                ValidationHelper.NonNegative(price, "Цена"),
+                ValidationHelper.MaxLen(txtTheme.Text, 255, "Тема"));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var context = new MuseumDbContext();
             var exhibition = new Exhibition
             {
                 IdExhibition = (context.Exhibitions.Max(x => (int?)x.IdExhibition) ?? 0) + 1,
-                ExhibitionName = txtName.Text,
-                StartDate = dpStart.SelectedDate ?? DateTime.Today,
-                EndDate = dpEnd.SelectedDate ?? DateTime.Today,
-                Price = InputHelper.ParseDecimal(txtPrice.Text),
-                Theme = string.IsNullOrWhiteSpace(txtTheme.Text) ? null : txtTheme.Text,
-                IdCurator = (int)cmbCurator.SelectedValue
+                ExhibitionName = txtName.Text.Trim(),
+                StartDate = dpStart.SelectedDate!.Value,
+                EndDate = dpEnd.SelectedDate!.Value,
+                Price = price,
+                Theme = string.IsNullOrWhiteSpace(txtTheme.Text) ? null : txtTheme.Text.Trim(),
+                IdCurator = (int)cmbCurator.SelectedValue!
             };
             context.Exhibitions.Add(exhibition);
             context.SaveChanges();
@@ -39,7 +53,7 @@ public partial class AddExhibitionWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

@@ -46,7 +46,7 @@ public partial class LoginWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Ошибка входа: " + ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

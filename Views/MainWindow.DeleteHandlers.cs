@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Views;
 
@@ -31,7 +32,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -66,7 +67,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -101,7 +102,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -136,7 +137,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -171,7 +172,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -206,7 +207,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -241,7 +242,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -276,7 +277,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -311,7 +312,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -346,7 +347,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -381,7 +382,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }
@@ -416,7 +417,7 @@ public partial class MainWindow
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка: " + ex.Message);
+                    DbErrorHelper.Show(ex);
                 }
             }
         }

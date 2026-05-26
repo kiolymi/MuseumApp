@@ -20,16 +20,33 @@ public partial class AddEmployeeWindow : Window
     {
         try
         {
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtLastName.Text, "Фамилия"),
+                ValidationHelper.NotEmpty(txtFirstName.Text, "Имя"),
+                ValidationHelper.NotEmpty(txtMiddleName.Text, "Отчество"),
+                ValidationHelper.MaxLen(txtLastName.Text, 45, "Фамилия"),
+                ValidationHelper.MaxLen(txtFirstName.Text, 45, "Имя"),
+                ValidationHelper.MaxLen(txtMiddleName.Text, 45, "Отчество"),
+                ValidationHelper.MaxLen(txtPhone.Text, 45, "Телефон"),
+                ValidationHelper.MaxLen(txtEducation.Text, 45, "Образование"),
+                ValidationHelper.Combo(cmbPosition.SelectedValue, "Должность"),
+                ValidationHelper.BirthDate(dpBirthDate.SelectedDate));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var context = new MuseumDbContext();
             var employee = new Employee
             {
-                LastName = txtLastName.Text,
-                FirstName = txtFirstName.Text,
-                MiddleName = txtMiddleName.Text,
-                IdPosition = (int)cmbPosition.SelectedValue,
+                LastName = txtLastName.Text.Trim(),
+                FirstName = txtFirstName.Text.Trim(),
+                MiddleName = txtMiddleName.Text.Trim(),
+                IdPosition = (int)cmbPosition.SelectedValue!,
                 Phone = string.IsNullOrWhiteSpace(txtPhone.Text) ? null : txtPhone.Text,
-                BirthDate = DateOnly.FromDateTime(dpBirthDate.SelectedDate ?? DateTime.Today),
-                EducationLevel = string.IsNullOrWhiteSpace(txtEducation.Text) ? null : txtEducation.Text
+                BirthDate = DateOnly.FromDateTime(dpBirthDate.SelectedDate!.Value),
+                EducationLevel = string.IsNullOrWhiteSpace(txtEducation.Text) ? null : txtEducation.Text.Trim()
             };
             context.Employees.Add(employee);
             context.SaveChanges();
@@ -38,7 +55,7 @@ public partial class AddEmployeeWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

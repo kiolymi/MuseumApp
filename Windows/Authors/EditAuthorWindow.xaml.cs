@@ -24,14 +24,27 @@ public partial class EditAuthorWindow : Window
     {
         try
         {
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtLastName.Text, "Фамилия"),
+                ValidationHelper.NotEmpty(txtFirstName.Text, "Имя"),
+                ValidationHelper.MaxLen(txtLastName.Text, 45, "Фамилия"),
+                ValidationHelper.MaxLen(txtFirstName.Text, 45, "Имя"),
+                ValidationHelper.MaxLen(txtMiddleName.Text, 45, "Отчество"),
+                ValidationHelper.Combo(cmbCountry.SelectedValue, "Страна"));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var context = new MuseumDbContext();
             var item = context.Authors.Find(_id);
             if (item == null) return;
 
-            item.LastName = txtLastName.Text;
-            item.FirstName = txtFirstName.Text;
-            item.MiddleName = string.IsNullOrWhiteSpace(txtMiddleName.Text) ? null : txtMiddleName.Text;
-            item.IdCountry = (int)cmbCountry.SelectedValue;
+            item.LastName = txtLastName.Text.Trim();
+            item.FirstName = txtFirstName.Text.Trim();
+            item.MiddleName = string.IsNullOrWhiteSpace(txtMiddleName.Text) ? null : txtMiddleName.Text.Trim();
+            item.IdCountry = (int)cmbCountry.SelectedValue!;
 
             context.SaveChanges();
             DialogResult = true;
@@ -39,7 +52,7 @@ public partial class EditAuthorWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

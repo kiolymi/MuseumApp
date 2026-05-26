@@ -18,13 +18,26 @@ public partial class AddAuthorWindow : Window
     {
         try
         {
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtLastName.Text, "Фамилия"),
+                ValidationHelper.NotEmpty(txtFirstName.Text, "Имя"),
+                ValidationHelper.MaxLen(txtLastName.Text, 45, "Фамилия"),
+                ValidationHelper.MaxLen(txtFirstName.Text, 45, "Имя"),
+                ValidationHelper.MaxLen(txtMiddleName.Text, 45, "Отчество"),
+                ValidationHelper.Combo(cmbCountry.SelectedValue, "Страна"));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var context = new MuseumDbContext();
             var author = new Author
             {
-                LastName = txtLastName.Text,
-                FirstName = txtFirstName.Text,
-                MiddleName = string.IsNullOrWhiteSpace(txtMiddleName.Text) ? null : txtMiddleName.Text,
-                IdCountry = (int)cmbCountry.SelectedValue
+                LastName = txtLastName.Text.Trim(),
+                FirstName = txtFirstName.Text.Trim(),
+                MiddleName = string.IsNullOrWhiteSpace(txtMiddleName.Text) ? null : txtMiddleName.Text.Trim(),
+                IdCountry = (int)cmbCountry.SelectedValue!
             };
             context.Authors.Add(author);
             context.SaveChanges();
@@ -33,7 +46,7 @@ public partial class AddAuthorWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

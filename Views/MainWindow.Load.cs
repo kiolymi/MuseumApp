@@ -47,7 +47,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Ошибка загрузки: " + ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

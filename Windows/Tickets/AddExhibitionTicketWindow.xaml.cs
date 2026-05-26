@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Tickets;
 
@@ -27,7 +28,7 @@ public partial class AddExhibitionTicketWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Ошибка загрузки: " + ex.Message);
+            DbErrorHelper.Show(ex);
             Close();
         }
     }
@@ -36,13 +37,23 @@ public partial class AddExhibitionTicketWindow : Window
     {
         try
         {
+            var error = ValidationHelper.First(
+                ValidationHelper.Combo(cmbVisitor.SelectedValue, "Посетитель"),
+                ValidationHelper.Combo(cmbExhibition.SelectedValue, "Выставка"),
+                ValidationHelper.VisitDate(dpVisitDate.SelectedDate));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var visitTime = TimeOnly.Parse(txtVisitTime.Text.Trim(), CultureInfo.InvariantCulture);
             var context = new MuseumDbContext();
-            var exhibition = context.Exhibitions.Find((int)cmbExhibition.SelectedValue);
+            var exhibition = context.Exhibitions.Find((int)cmbExhibition.SelectedValue!);
             var ticket = new ExhibitionTicket
             {
-                IdVisitor = (int)cmbVisitor.SelectedValue,
-                IdExhibition = (int)cmbExhibition.SelectedValue,
+                IdVisitor = (int)cmbVisitor.SelectedValue!,
+                IdExhibition = (int)cmbExhibition.SelectedValue!,
                 VisitDate = DateOnly.FromDateTime(dpVisitDate.SelectedDate ?? DateTime.Today),
                 VisitTime = visitTime,
                 ActualCost = exhibition?.Price ?? 0
@@ -54,7 +65,7 @@ public partial class AddExhibitionTicketWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

@@ -28,18 +28,34 @@ public partial class EditEventWindow : Window
     {
         try
         {
+            var duration = InputHelper.ParseInt(txtDuration.Text);
+            var price = InputHelper.ParseDecimal(txtPrice.Text);
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtName.Text, "Название"),
+                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
+                ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал"),
+                ValidationHelper.Combo(cmbEmployee.SelectedValue, "Сотрудник"),
+                ValidationHelper.VisitDate(dpEventDate.SelectedDate),
+                ValidationHelper.Positive(duration, "Длительность"),
+                ValidationHelper.NonNegative(price, "Цена"));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var startTime = TimeOnly.Parse(txtStartTime.Text.Trim(), CultureInfo.InvariantCulture);
             var context = new MuseumDbContext();
             var item = context.Events.Find(_id);
             if (item == null) return;
 
-            item.EventName = txtName.Text;
-            item.IdBranch = (int)cmbBranch.SelectedValue;
-            item.IdEmployee = (int)cmbEmployee.SelectedValue;
-            item.EventDate = DateOnly.FromDateTime(dpEventDate.SelectedDate ?? DateTime.Today);
+            item.EventName = txtName.Text.Trim();
+            item.IdBranch = (int)cmbBranch.SelectedValue!;
+            item.IdEmployee = (int)cmbEmployee.SelectedValue!;
+            item.EventDate = DateOnly.FromDateTime(dpEventDate.SelectedDate!.Value);
             item.StartTime = startTime;
-            item.DurationMinutes = InputHelper.ParseInt(txtDuration.Text);
-            item.Price = InputHelper.ParseDecimal(txtPrice.Text);
+            item.DurationMinutes = duration;
+            item.Price = price;
 
             context.SaveChanges();
             DialogResult = true;
@@ -47,7 +63,7 @@ public partial class EditEventWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

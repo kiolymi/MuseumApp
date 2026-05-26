@@ -18,12 +18,23 @@ public partial class AddCollectionWindow : Window
     {
         try
         {
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtName.Text, "Название"),
+                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
+                ValidationHelper.Combo(cmbKeeper.SelectedValue, "Хранитель"),
+                ValidationHelper.MaxLen(txtDescription.Text, 255, "Описание"));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var context = new MuseumDbContext();
             var collection = new Collection
             {
-                CollectionName = txtName.Text,
-                Description = txtDescription.Text,
-                IdKeeper = (int)cmbKeeper.SelectedValue
+                CollectionName = txtName.Text.Trim(),
+                Description = txtDescription.Text.Trim(),
+                IdKeeper = (int)cmbKeeper.SelectedValue!
             };
             context.Collections.Add(collection);
             context.SaveChanges();
@@ -32,7 +43,7 @@ public partial class AddCollectionWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

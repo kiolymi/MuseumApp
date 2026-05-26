@@ -26,7 +26,7 @@ public partial class EditExcursionWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Ошибка загрузки выставок: " + ex.Message);
+            DbErrorHelper.Show(ex);
             Close();
             return;
         }
@@ -39,15 +39,29 @@ public partial class EditExcursionWindow : Window
     {
         try
         {
+            var duration = InputHelper.ParseInt(txtDuration.Text);
+            var price = InputHelper.ParseDecimal(txtPrice.Text);
+            var error = ValidationHelper.First(
+                ValidationHelper.Combo(cmbExhibition.SelectedValue, "Выставка"),
+                ValidationHelper.Combo(cmbGuide.SelectedValue, "Гид"),
+                ValidationHelper.Combo(cmbCustomer.SelectedValue, "Заказчик"),
+                ValidationHelper.Positive(duration, "Длительность"),
+                ValidationHelper.NonNegative(price, "Цена"));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var context = new MuseumDbContext();
             var item = context.Excursions.Find(_id);
             if (item == null) return;
 
-            item.IdExhibition = (int)cmbExhibition.SelectedValue;
-            item.IdGuide = (int)cmbGuide.SelectedValue;
-            item.IdCustomer = (int)cmbCustomer.SelectedValue;
-            item.Duration = InputHelper.ParseInt(txtDuration.Text);
-            item.Price = InputHelper.ParseDecimal(txtPrice.Text);
+            item.IdExhibition = (int)cmbExhibition.SelectedValue!;
+            item.IdGuide = (int)cmbGuide.SelectedValue!;
+            item.IdCustomer = (int)cmbCustomer.SelectedValue!;
+            item.Duration = duration;
+            item.Price = price;
 
             context.SaveChanges();
             DialogResult = true;
@@ -55,7 +69,7 @@ public partial class EditExcursionWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

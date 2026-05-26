@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Tickets;
 
@@ -27,7 +28,7 @@ public partial class AddExcursionTicketWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Ошибка загрузки: " + ex.Message);
+            DbErrorHelper.Show(ex);
             Close();
         }
     }
@@ -36,12 +37,22 @@ public partial class AddExcursionTicketWindow : Window
     {
         try
         {
+            var error = ValidationHelper.First(
+                ValidationHelper.Combo(cmbVisitor.SelectedValue, "Посетитель"),
+                ValidationHelper.Combo(cmbExcursion.SelectedValue, "Экскурсия"),
+                ValidationHelper.VisitDate(dpVisitDate.SelectedDate));
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var visitTime = TimeOnly.Parse(txtVisitTime.Text.Trim(), CultureInfo.InvariantCulture);
             var context = new MuseumDbContext();
             var ticket = new ExcursionTicket
             {
-                IdVisitor = (int)cmbVisitor.SelectedValue,
-                IdExcursion = (int)cmbExcursion.SelectedValue,
+                IdVisitor = (int)cmbVisitor.SelectedValue!,
+                IdExcursion = (int)cmbExcursion.SelectedValue!,
                 VisitDate = DateOnly.FromDateTime(dpVisitDate.SelectedDate ?? DateTime.Today),
                 VisitTime = visitTime
             };
@@ -52,7 +63,7 @@ public partial class AddExcursionTicketWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

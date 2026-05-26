@@ -18,13 +18,26 @@ public partial class AddHallWindow : Window
     {
         try
         {
+            var capacity = InputHelper.ParseNullableInt(txtCapacity.Text);
+            var area = InputHelper.ParseNullableDouble(txtArea.Text);
+            var error = ValidationHelper.First(
+                ValidationHelper.NotEmpty(txtName.Text, "Название"),
+                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
+                ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал"),
+                capacity.HasValue ? ValidationHelper.Positive(capacity.Value, "Вместимость") : null);
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
             var context = new MuseumDbContext();
             var hall = new Hall
             {
-                HallName = txtName.Text,
-                IdBranch = (int)cmbBranch.SelectedValue,
-                Area = string.IsNullOrWhiteSpace(txtArea.Text) ? null : Convert.ToDouble(txtArea.Text),
-                Capacity = InputHelper.ParseNullableInt(txtCapacity.Text)
+                HallName = txtName.Text.Trim(),
+                IdBranch = (int)cmbBranch.SelectedValue!,
+                Area = area,
+                Capacity = capacity
             };
             context.Halls.Add(hall);
             context.SaveChanges();
@@ -33,7 +46,7 @@ public partial class AddHallWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 }

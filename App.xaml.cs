@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using MuseumApp.Helpers;
 
 namespace MuseumApp;
 
@@ -8,7 +9,7 @@ public partial class App : Application
     {
         DispatcherUnhandledException += (_, e) =>
         {
-            MessageBox.Show("Ошибка: " + e.Exception.Message);
+            MessageBox.Show(DbErrorHelper.GetMessage(e.Exception));
             e.Handled = true;
         };
     }

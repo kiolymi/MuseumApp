@@ -1,4 +1,5 @@
 using System.Windows;
+using MuseumApp.Helpers;
 using MuseumApp.Queries;
 
 namespace MuseumApp.Views;
@@ -29,7 +30,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Ошибка поиска: " + ex.Message);
+            DbErrorHelper.Show(ex);
         }
     }
 
