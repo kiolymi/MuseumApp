@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Controls;
 using MuseumApp.Data;
 using MuseumApp.Helpers;
 
@@ -10,16 +9,22 @@ public partial class LoginWindow : Window
     public LoginWindow()
     {
         InitializeComponent();
-        cmbRole.SelectedIndex = 0;
     }
 
     private void btnLogin_Click(object sender, RoutedEventArgs e)
     {
+        var login = txtLogin.Text.Trim();
+        if (string.IsNullOrEmpty(login))
+        {
+            MessageBox.Show("Введите логин.");
+            return;
+        }
+
         try
         {
-            SessionUser.Login = txtLogin.Text.Trim();
+            SessionUser.Login = login;
             SessionUser.Password = txtPassword.Password;
-            SessionUser.Role = (cmbRole.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "";
+            SessionUser.Role = RoleHelper.ResolveRole(login);
 
             using var context = new MuseumDbContext();
             context.Database.CanConnect();

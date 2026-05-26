@@ -6,9 +6,9 @@ namespace MuseumApp.Views;
 
 public partial class MainWindow
 {
-    private void DelExhibitionContext(object sender, RoutedEventArgs e)
+    private void DelExhibition()
     {
-        if (dg_exhibitions.SelectedItem is Exhibition selected)
+        if (dgMain.SelectedItem is Exhibition selected)
         {
             var result = MessageBox.Show(
                 $"Удалить выставку {selected.ExhibitionName}?",
@@ -17,16 +17,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.Exhibitions.Find(selected.IdExhibition);
+                    if (item != null)
                     {
-                        var item = context.Exhibitions.Find(selected.IdExhibition);
-                        if (item != null)
-                        {
-                            context.Exhibitions.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.Exhibitions.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -41,9 +39,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelExhibitContext(object sender, RoutedEventArgs e)
+    private void DelExhibit()
     {
-        if (dg_exhibits.SelectedItem is Exhibit selected)
+        if (dgMain.SelectedItem is Exhibit selected)
         {
             var result = MessageBox.Show(
                 $"Удалить экспонат {selected.Name}?",
@@ -52,16 +50,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.Exhibits.Find(selected.IdExhibit);
+                    if (item != null)
                     {
-                        var item = context.Exhibits.Find(selected.IdExhibit);
-                        if (item != null)
-                        {
-                            context.Exhibits.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.Exhibits.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -76,9 +72,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelCollectionContext(object sender, RoutedEventArgs e)
+    private void DelCollection()
     {
-        if (dg_collections.SelectedItem is Collection selected)
+        if (dgMain.SelectedItem is Collection selected)
         {
             var result = MessageBox.Show(
                 $"Удалить коллекцию {selected.CollectionName}?",
@@ -87,16 +83,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.Collections.Find(selected.IdCollection);
+                    if (item != null)
                     {
-                        var item = context.Collections.Find(selected.IdCollection);
-                        if (item != null)
-                        {
-                            context.Collections.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.Collections.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -111,9 +105,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelHallContext(object sender, RoutedEventArgs e)
+    private void DelHall()
     {
-        if (dg_halls.SelectedItem is Hall selected)
+        if (dgMain.SelectedItem is Hall selected)
         {
             var result = MessageBox.Show(
                 $"Удалить зал {selected.HallName}?",
@@ -122,16 +116,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.Halls.Find(selected.IdHall);
+                    if (item != null)
                     {
-                        var item = context.Halls.Find(selected.IdHall);
-                        if (item != null)
-                        {
-                            context.Halls.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.Halls.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -146,9 +138,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelAuthorContext(object sender, RoutedEventArgs e)
+    private void DelAuthor()
     {
-        if (dg_authors.SelectedItem is Author selected)
+        if (dgMain.SelectedItem is Author selected)
         {
             var result = MessageBox.Show(
                 $"Удалить автора {selected.LastName} {selected.FirstName}?",
@@ -157,16 +149,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.Authors.Find(selected.IdAuthor);
+                    if (item != null)
                     {
-                        var item = context.Authors.Find(selected.IdAuthor);
-                        if (item != null)
-                        {
-                            context.Authors.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.Authors.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -181,9 +171,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelVisitorContext(object sender, RoutedEventArgs e)
+    private void DelVisitor()
     {
-        if (dg_visitors.SelectedItem is Visitor selected)
+        if (dgMain.SelectedItem is Visitor selected)
         {
             var result = MessageBox.Show(
                 $"Удалить посетителя {selected.LastName} {selected.FirstName}?",
@@ -192,16 +182,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.Visitors.Find(selected.IdVisitor);
+                    if (item != null)
                     {
-                        var item = context.Visitors.Find(selected.IdVisitor);
-                        if (item != null)
-                        {
-                            context.Visitors.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.Visitors.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -216,9 +204,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelExhibitionTicketContext(object sender, RoutedEventArgs e)
+    private void DelExhibitionTicket()
     {
-        if (dg_exhibitionTickets.SelectedItem is ExhibitionTicket selected)
+        if (dgMain.SelectedItem is ExhibitionTicket selected)
         {
             var result = MessageBox.Show(
                 $"Удалить билет (посетитель {selected.IdVisitor}, выставка {selected.IdExhibition})?",
@@ -227,16 +215,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.ExhibitionTickets.Find(selected.IdExhibition, selected.IdVisitor);
+                    if (item != null)
                     {
-                        var item = context.ExhibitionTickets.Find(selected.IdExhibition, selected.IdVisitor);
-                        if (item != null)
-                        {
-                            context.ExhibitionTickets.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.ExhibitionTickets.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -251,9 +237,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelExcursionTicketContext(object sender, RoutedEventArgs e)
+    private void DelExcursionTicket()
     {
-        if (dg_excursionTickets.SelectedItem is ExcursionTicket selected)
+        if (dgMain.SelectedItem is ExcursionTicket selected)
         {
             var result = MessageBox.Show(
                 $"Удалить билет (посетитель {selected.IdVisitor}, экскурсия {selected.IdExcursion})?",
@@ -262,16 +248,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.ExcursionTickets.Find(selected.IdVisitor, selected.IdExcursion);
+                    if (item != null)
                     {
-                        var item = context.ExcursionTickets.Find(selected.IdVisitor, selected.IdExcursion);
-                        if (item != null)
-                        {
-                            context.ExcursionTickets.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.ExcursionTickets.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -286,9 +270,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelExcursionContext(object sender, RoutedEventArgs e)
+    private void DelExcursion()
     {
-        if (dg_excursions.SelectedItem is Excursion selected)
+        if (dgMain.SelectedItem is Excursion selected)
         {
             var result = MessageBox.Show(
                 $"Удалить экскурсию #{selected.IdExcursion}?",
@@ -297,16 +281,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.Excursions.Find(selected.IdExcursion);
+                    if (item != null)
                     {
-                        var item = context.Excursions.Find(selected.IdExcursion);
-                        if (item != null)
-                        {
-                            context.Excursions.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.Excursions.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -321,9 +303,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelPrivilegeContext(object sender, RoutedEventArgs e)
+    private void DelPrivilege()
     {
-        if (dg_privileges.SelectedItem is Privilege selected)
+        if (dgMain.SelectedItem is Privilege selected)
         {
             var result = MessageBox.Show(
                 $"Удалить льготу {selected.PrivilegeName}?",
@@ -332,16 +314,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.Privileges.Find(selected.IdPrivilege);
+                    if (item != null)
                     {
-                        var item = context.Privileges.Find(selected.IdPrivilege);
-                        if (item != null)
-                        {
-                            context.Privileges.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.Privileges.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -356,9 +336,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelEmployeeContext(object sender, RoutedEventArgs e)
+    private void DelEmployee()
     {
-        if (dg_employees.SelectedItem is Employee selected)
+        if (dgMain.SelectedItem is Employee selected)
         {
             var result = MessageBox.Show(
                 $"Удалить сотрудника {selected.LastName} {selected.FirstName}?",
@@ -367,16 +347,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.Employees.Find(selected.IdEmployee);
+                    if (item != null)
                     {
-                        var item = context.Employees.Find(selected.IdEmployee);
-                        if (item != null)
-                        {
-                            context.Employees.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.Employees.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
@@ -391,9 +369,9 @@ public partial class MainWindow
         }
     }
 
-    private void DelEventContext(object sender, RoutedEventArgs e)
+    private void DelEvent()
     {
-        if (dg_events.SelectedItem is Event selected)
+        if (dgMain.SelectedItem is Event selected)
         {
             var result = MessageBox.Show(
                 $"Удалить мероприятие {selected.EventName}?",
@@ -402,16 +380,14 @@ public partial class MainWindow
             {
                 try
                 {
-                    using (var context = new MuseumDbContext())
+                    using var context = new MuseumDbContext();
+                    var item = context.Events.Find(selected.IdEvent);
+                    if (item != null)
                     {
-                        var item = context.Events.Find(selected.IdEvent);
-                        if (item != null)
-                        {
-                            context.Events.Remove(item);
-                            context.SaveChanges();
-                            Load();
-                            MessageBox.Show("Удалено");
-                        }
+                        context.Events.Remove(item);
+                        context.SaveChanges();
+                        Load();
+                        MessageBox.Show("Удалено");
                     }
                 }
                 catch (Exception ex)
