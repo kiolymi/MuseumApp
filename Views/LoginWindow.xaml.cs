@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Controls;
 using MuseumApp.Data;
 using MuseumApp.Helpers;
 
@@ -10,7 +9,6 @@ public partial class LoginWindow : Window
     public LoginWindow()
     {
         InitializeComponent();
-        cmbRole.SelectedIndex = 0;
     }
 
     private void btnLogin_Click(object sender, RoutedEventArgs e)
@@ -19,10 +17,28 @@ public partial class LoginWindow : Window
         {
             SessionUser.Login = txtLogin.Text.Trim();
             SessionUser.Password = txtPassword.Password;
-            SessionUser.Role = (cmbRole.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "";
 
-            using var context = new MuseumDbContext();
-            context.Database.CanConnect();
+            if (string.IsNullOrWhiteSpace(SessionUser.Login))
+            {
+                MessageBox.Show("Введите логин.");
+                return;
+            }
+
+            using (var context = new MuseumDbContext())
+            {
+                if (!context.Database.CanConnect())
+                {
+                    MessageBox.Show("Не удалось подключиться к базе данных.");
+                    return;
+                }
+            }
+
+            SessionUser.Role = SessionUser.ResolveRoleFromDatabase();
+            if (string.IsNullOrEmpty(SessionUser.Role))
+            {
+                MessageBox.Show("У пользователя нет роли admin_museum, curator_museum или cashier_museum.");
+                return;
+            }
 
             var main = new MainWindow();
             main.Show();
