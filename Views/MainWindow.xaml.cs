@@ -1,145 +1,195 @@
 using System.Windows;
 using System.Windows.Controls;
+using MuseumApp.Data.Entities;
 using MuseumApp.Helpers;
+using MuseumApp.Navigation;
+using MuseumApp.Services;
 
 namespace MuseumApp.Views;
 
 public partial class MainWindow : Window
 {
+    private TableDefinition? _currentTable;
+    private readonly List<TableTreeItem> _allTreeItems = [];
+
     public MainWindow()
     {
         InitializeComponent();
-        Title = $"ИС Музейный комплекс — Добро пожаловать, {SessionUser.Login}";
+        txtUserHeader.Text = SessionUser.HeaderText;
+        Title = $"ИС Музейный комплекс — {SessionUser.HeaderText}";
 
-        foreach (var grid in new DataGrid[]
-        {
-            dg_exhibitions, dg_exhibits, dg_collections, dg_halls, dg_authors,
-            dg_visitors, dg_exhibitionTickets, dg_excursionTickets, dg_excursions,
-            dg_privileges, dg_employees, dg_events
-        })
-        {
-            grid.AutoGeneratingColumn += DataGrid_AutoGeneratingColumn;
-        }
-
-        foreach (var tab in new UIElement[]
-        {
-            tabExhibitions, tabExhibits, tabCollections, tabHalls, tabAuthors,
-            tabVisitors, tabExhibitionTickets, tabExcursionTickets, tabExcursions,
-            tabPrivileges, tabEmployees, tabEvents
-        })
-        {
-            tab.Visibility = Visibility.Collapsed;
-        }
-
-        foreach (var button in new UIElement[]
-        {
-            btn_add_exhibitions, btn_change_exhibitions, btn_add_exhibits, btn_change_exhibits,
-            btn_add_collections, btn_change_collections, btn_add_halls, btn_change_halls,
-            btn_add_authors, btn_change_authors, btn_add_visitors, btn_change_visitors,
-            btn_add_exhibitionTickets, btn_change_exhibitionTickets,
-            btn_add_excursionTickets, btn_change_excursionTickets,
-            btn_add_excursions, btn_change_excursions, btn_add_privileges, btn_change_privileges,
-            btn_add_employees, btn_change_employees, btn_add_events, btn_change_events
-        })
-        {
-            button.Visibility = Visibility.Collapsed;
-        }
-
-        if (SessionUser.Role == "admin_museum")
-        {
-            tabExhibitions.Visibility = Visibility.Visible;
-            tabExhibits.Visibility = Visibility.Visible;
-            tabCollections.Visibility = Visibility.Visible;
-            tabHalls.Visibility = Visibility.Visible;
-            tabAuthors.Visibility = Visibility.Visible;
-            tabVisitors.Visibility = Visibility.Visible;
-            tabExhibitionTickets.Visibility = Visibility.Visible;
-            tabExcursionTickets.Visibility = Visibility.Visible;
-            tabExcursions.Visibility = Visibility.Visible;
-            tabPrivileges.Visibility = Visibility.Visible;
-            tabEmployees.Visibility = Visibility.Visible;
-            tabEvents.Visibility = Visibility.Visible;
-
-            btn_add_exhibitions.Visibility = Visibility.Visible;
-            btn_change_exhibitions.Visibility = Visibility.Visible;
-            btn_add_exhibits.Visibility = Visibility.Visible;
-            btn_change_exhibits.Visibility = Visibility.Visible;
-            btn_add_collections.Visibility = Visibility.Visible;
-            btn_change_collections.Visibility = Visibility.Visible;
-            btn_add_halls.Visibility = Visibility.Visible;
-            btn_change_halls.Visibility = Visibility.Visible;
-            btn_add_authors.Visibility = Visibility.Visible;
-            btn_change_authors.Visibility = Visibility.Visible;
-            btn_add_visitors.Visibility = Visibility.Visible;
-            btn_change_visitors.Visibility = Visibility.Visible;
-            btn_add_exhibitionTickets.Visibility = Visibility.Visible;
-            btn_change_exhibitionTickets.Visibility = Visibility.Visible;
-            btn_add_excursionTickets.Visibility = Visibility.Visible;
-            btn_change_excursionTickets.Visibility = Visibility.Visible;
-            btn_add_excursions.Visibility = Visibility.Visible;
-            btn_change_excursions.Visibility = Visibility.Visible;
-            btn_add_privileges.Visibility = Visibility.Visible;
-            btn_change_privileges.Visibility = Visibility.Visible;
-            btn_add_employees.Visibility = Visibility.Visible;
-            btn_change_employees.Visibility = Visibility.Visible;
-            btn_add_events.Visibility = Visibility.Visible;
-            btn_change_events.Visibility = Visibility.Visible;
-        }
-        else if (SessionUser.Role == "curator_museum")
-        {
-            tabExhibitions.Visibility = Visibility.Visible;
-            tabExhibits.Visibility = Visibility.Visible;
-            tabCollections.Visibility = Visibility.Visible;
-            tabHalls.Visibility = Visibility.Visible;
-            tabAuthors.Visibility = Visibility.Visible;
-
-            btn_add_exhibitions.Visibility = Visibility.Visible;
-            btn_change_exhibitions.Visibility = Visibility.Visible;
-            btn_add_exhibits.Visibility = Visibility.Visible;
-            btn_change_exhibits.Visibility = Visibility.Visible;
-            btn_add_collections.Visibility = Visibility.Visible;
-            btn_change_collections.Visibility = Visibility.Visible;
-            btn_add_halls.Visibility = Visibility.Visible;
-            btn_change_halls.Visibility = Visibility.Visible;
-            btn_add_authors.Visibility = Visibility.Visible;
-            btn_change_authors.Visibility = Visibility.Visible;
-        }
-        else if (SessionUser.Role == "cashier_museum")
-        {
-            tabExhibitions.Visibility = Visibility.Visible;
-            tabExcursions.Visibility = Visibility.Visible;
-            tabVisitors.Visibility = Visibility.Visible;
-            tabExhibitionTickets.Visibility = Visibility.Visible;
-            tabExcursionTickets.Visibility = Visibility.Visible;
-            tabPrivileges.Visibility = Visibility.Visible;
-
-            btn_add_visitors.Visibility = Visibility.Visible;
-            btn_change_visitors.Visibility = Visibility.Visible;
-            btn_add_exhibitionTickets.Visibility = Visibility.Visible;
-            btn_change_exhibitionTickets.Visibility = Visibility.Visible;
-            btn_add_excursionTickets.Visibility = Visibility.Visible;
-            btn_change_excursionTickets.Visibility = Visibility.Visible;
-            btn_add_privileges.Visibility = Visibility.Visible;
-            btn_change_privileges.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            tabExhibitions.Visibility = Visibility.Visible;
-        }
-
-        foreach (var item in mainTabs.Items)
-        {
-            if (item is UIElement element && element.Visibility == Visibility.Visible)
-            {
-                mainTabs.SelectedItem = item;
-                break;
-            }
-        }
+        dgData.AutoGeneratingColumn += DataGrid_AutoGeneratingColumn;
 
         dpTicketFrom.SelectedDate = new DateTime(2024, 1, 1);
         dpTicketTo.SelectedDate = new DateTime(2024, 12, 31);
 
-        Load();
+        BuildTree();
+    }
+
+    private void BuildTree(string? filter = null)
+    {
+        _allTreeItems.Clear();
+        foreach (var def in TableCatalog.ForRole(SessionUser.Role))
+            _allTreeItems.Add(new TableTreeItem { Definition = def });
+
+        treeTables.Items.Clear();
+        var q = string.IsNullOrWhiteSpace(filter)
+            ? _allTreeItems
+            : _allTreeItems.Where(i =>
+                i.SearchText.Contains(filter.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        foreach (var item in q)
+        {
+            var node = new TreeViewItem
+            {
+                Header = item.Definition.Title,
+                Tag = item
+            };
+            treeTables.Items.Add(node);
+        }
+
+        if (treeTables.Items.Count > 0)
+            ((TreeViewItem)treeTables.Items[0]).IsSelected = true;
+        else
+            ClearGrid();
+    }
+
+    private void txtSearch_TextChanged(object sender, TextChangedEventArgs e) =>
+        BuildTree(txtSearch.Text);
+
+    private void treeTables_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    {
+        if (treeTables.SelectedItem is not TreeViewItem { Tag: TableTreeItem item })
+            return;
+
+        _currentTable = item.Definition;
+        txtTableTitle.Text = $"{item.Definition.Title}  ({item.Definition.DbName})";
+
+        var def = item.Definition;
+        var canWrite = def.CanWrite(SessionUser.Role);
+
+        btnAdd.Visibility = canWrite ? Visibility.Visible : Visibility.Collapsed;
+        btnEdit.Visibility = canWrite && !TableCatalog.IsLinkTable(def.Id)
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+        btnDelete.Visibility = def.CanDelete(SessionUser.Role)
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        panelTicketFilter.Visibility = item.Definition.Id == TableId.ExhibitionTickets
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        ReloadGrid();
+    }
+
+    private void ReloadGrid()
+    {
+        if (_currentTable == null)
+            return;
+
+        try
+        {
+            DateOnly? from = null;
+            DateOnly? to = null;
+            if (_currentTable.Id == TableId.ExhibitionTickets
+                && dpTicketFrom.SelectedDate.HasValue
+                && dpTicketTo.SelectedDate.HasValue)
+            {
+                from = DateOnly.FromDateTime(dpTicketFrom.SelectedDate.Value);
+                to = DateOnly.FromDateTime(dpTicketTo.SelectedDate.Value);
+            }
+
+            dgData.ItemsSource = TableDataService.Load(_currentTable.Id, from, to);
+        }
+        catch (Exception ex)
+        {
+            DbErrorHelper.Show(ex);
+        }
+    }
+
+    private void ClearGrid()
+    {
+        _currentTable = null;
+        txtTableTitle.Text = "";
+        dgData.ItemsSource = null;
+        btnAdd.Visibility = Visibility.Collapsed;
+        btnEdit.Visibility = Visibility.Collapsed;
+        btnDelete.Visibility = Visibility.Collapsed;
+        panelTicketFilter.Visibility = Visibility.Collapsed;
+    }
+
+    private void btnAdd_Click(object sender, RoutedEventArgs e)
+    {
+        if (_currentTable == null) return;
+        if (TableCrudService.TryAdd(_currentTable.Id, this))
+            ReloadGrid();
+    }
+
+    private void btnEdit_Click(object sender, RoutedEventArgs e)
+    {
+        if (_currentTable == null || dgData.SelectedItem == null)
+        {
+            MessageBox.Show("Выберите запись в таблице.");
+            return;
+        }
+
+        if (TableCrudService.TryEdit(_currentTable.Id, dgData.SelectedItem, this))
+            ReloadGrid();
+    }
+
+    private void btnDelete_Click(object sender, RoutedEventArgs e)
+    {
+        if (_currentTable == null || dgData.SelectedItem == null)
+        {
+            MessageBox.Show("Выберите запись для удаления.");
+            return;
+        }
+
+        var result = MessageBox.Show(
+            "Удалить выбранную запись?",
+            "Подтверждение",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+        if (result != MessageBoxResult.Yes)
+            return;
+
+        try
+        {
+            if (TableDeleteService.Delete(_currentTable.Id, dgData.SelectedItem))
+            {
+                ReloadGrid();
+                MessageBox.Show("Удалено");
+            }
+        }
+        catch (Exception ex)
+        {
+            DbErrorHelper.Show(ex);
+        }
+    }
+
+    private void btnFilterTickets_Click(object sender, RoutedEventArgs e)
+    {
+        if (dpTicketFrom.SelectedDate == null || dpTicketTo.SelectedDate == null)
+        {
+            MessageBox.Show("Выберите даты периода.");
+            return;
+        }
+
+        if (dpTicketFrom.SelectedDate > dpTicketTo.SelectedDate)
+        {
+            MessageBox.Show("Дата «с» не может быть позже даты «по».");
+            return;
+        }
+
+        ReloadGrid();
+    }
+
+    private void btnResetTickets_Click(object sender, RoutedEventArgs e)
+    {
+        dpTicketFrom.SelectedDate = new DateTime(2024, 1, 1);
+        dpTicketTo.SelectedDate = new DateTime(2024, 12, 31);
+        ReloadGrid();
     }
 
     private void btnLogout_Click(object sender, RoutedEventArgs e)

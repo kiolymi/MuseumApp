@@ -1,0 +1,9 @@
+<Window x:Class="MuseumApp.Windows.EventTickets.EditEventTicketWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  Title="Изменить билет на мероприятие" Height="240" Width="460" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+<Grid Margin="16"><Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+<Label Content="Посетитель:"/><ComboBox x:Name="cmbVisitor" Grid.Row="1" IsEnabled="False" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
+<Label Grid.Row="2" Content="Мероприятие:"/><ComboBox x:Name="cmbEvent" Grid.Row="2" IsEnabled="False" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
+<Label Grid.Row="3" Content="Дата покупки:"/><DatePicker x:Name="dpPurchase" Grid.Row="3" Margin="0,0,0,8"/>
+<Label Grid.Row="4" Content="Цена:"/><TextBox x:Name="txtPrice" Grid.Row="4" Margin="0,0,0,8"/>
+<Button Grid.Row="5" Content="Сохранить" Height="32" Click="btnSave_Click"/></Grid></Window>

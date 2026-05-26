@@ -1,0 +1,10 @@
+<Window x:Class="MuseumApp.Windows.Reviews.EditReviewWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  Title="Изменить отзыв" Height="280" Width="460" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+<Grid Margin="16"><Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+<Label Content="Посетитель:"/><ComboBox x:Name="cmbVisitor" Grid.Row="1" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
+<Label Grid.Row="2" Content="Выставка:"/><ComboBox x:Name="cmbExhibition" Grid.Row="2" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
+<Label Grid.Row="3" Content="Оценка:"/><TextBox x:Name="txtRating" Grid.Row="3" Margin="0,0,0,8"/>
+<Label Grid.Row="4" Content="Комментарий:"/><TextBox x:Name="txtComment" Grid.Row="4" Margin="0,0,0,8"/>
+<Label Grid.Row="5" Content="Дата:"/><DatePicker x:Name="dpDate" Grid.Row="5" Margin="0,0,0,8"/>
+<Button Grid.Row="6" Content="Сохранить" Height="32" Click="btnSave_Click"/></Grid></Window>

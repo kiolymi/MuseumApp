@@ -1,0 +1,38 @@
+namespace MuseumApp.Navigation;
+
+public enum TableId
+{
+    Adresses,
+    Countries,
+    Materials,
+    Positions,
+    Privileges,
+    Reasons,
+    ExhibitConditions,
+    Authors,
+    Employees,
+    Museum,
+    Branches,
+    Storages,
+    Collections,
+    Exhibits,
+    Exhibitions,
+    Halls,
+    Visitors,
+    AuthorEx,
+    Excursions,
+    ExhibitionExhibits,
+    ExhibitionHalls,
+    ExhibitionTickets,
+    ExhibitMaterials,
+    ExhibitMovements,
+    Restorations,
+    ExcursionTickets,
+    Reviews,
+    Events,
+    EventTickets,
+    Shops,
+    Companies,
+    Products,
+    Inventory
+}

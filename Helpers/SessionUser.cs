@@ -9,6 +9,16 @@ public static class SessionUser
     public static string Role { get; set; } = "";
     public static string Password { get; set; } = "";
 
+    public static string RoleDisplayName => Role switch
+    {
+        "admin_museum" => "Администратор",
+        "curator_museum" => "Куратор",
+        "cashier_museum" => "Кассир",
+        _ => "Пользователь"
+    };
+
+    public static string HeaderText => $"{RoleDisplayName}, {Login}";
+
     public static string GetConnectionString()
     {
         return $"Host=localhost;Port=5433;Database=museum;Username={Login};Password={Password}";

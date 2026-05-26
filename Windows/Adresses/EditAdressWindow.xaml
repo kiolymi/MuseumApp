@@ -1,0 +1,12 @@
+<Window x:Class="MuseumApp.Windows.Adresses.EditAdressWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Изменить адрес" Height="280" Width="440" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+  <Grid Margin="16"><Grid.RowDefinitions>
+    <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+    <RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <Grid.ColumnDefinitions><ColumnDefinition Width="110"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+    <Label Content="Город:"/><TextBox x:Name="txtCity" Grid.Column="1" Margin="0,0,0,8"/>
+    <Label Grid.Row="1" Content="Улица:"/><TextBox x:Name="txtStreet" Grid.Row="1" Grid.Column="1" Margin="0,0,0,8"/>
+    <Label Grid.Row="2" Content="Дом:"/><TextBox x:Name="txtHouse" Grid.Row="2" Grid.Column="1" Margin="0,0,0,8"/>
+    <Label Grid.Row="3" Content="Индекс:"/><TextBox x:Name="txtPostal" Grid.Row="3" Grid.Column="1" Margin="0,0,0,8"/>
+    <Button Grid.Row="5" Grid.ColumnSpan="2" Content="Сохранить" Height="32" Click="btnSave_Click"/></Grid></Window>

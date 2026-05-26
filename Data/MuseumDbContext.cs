@@ -132,24 +132,6 @@ public partial class MuseumDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKaut");
 
-            entity.HasMany(d => d.IdExhs).WithMany(p => p.IdAuthors)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AuthorEx",
-                    r => r.HasOne<Exhibit>().WithMany()
-                        .HasForeignKey("IdExh")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKaex12"),
-                    l => l.HasOne<Author>().WithMany()
-                        .HasForeignKey("IdAuthor")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKaex11"),
-                    j =>
-                    {
-                        j.HasKey("IdAuthor", "IdExh").HasName("author_ex_pkey");
-                        j.ToTable("author_ex");
-                        j.IndexerProperty<int>("IdAuthor").HasColumnName("id_author");
-                        j.IndexerProperty<int>("IdExh").HasColumnName("id_exh");
-                    });
         });
 
         modelBuilder.Entity<Branch>(entity =>
@@ -410,25 +392,6 @@ public partial class MuseumDbContext : DbContext
                 .HasForeignKey(d => d.IdCondition)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKexbt2");
-
-            entity.HasMany(d => d.IdMaterials).WithMany(p => p.IdExhibits)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ExhibitMaterial",
-                    r => r.HasOne<Material>().WithMany()
-                        .HasForeignKey("IdMaterial")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKmat"),
-                    l => l.HasOne<Exhibit>().WithMany()
-                        .HasForeignKey("IdExhibit")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKexhib"),
-                    j =>
-                    {
-                        j.HasKey("IdExhibit", "IdMaterial").HasName("exhibit_materials_pkey");
-                        j.ToTable("exhibit_materials");
-                        j.IndexerProperty<int>("IdExhibit").HasColumnName("id_exhibit");
-                        j.IndexerProperty<int>("IdMaterial").HasColumnName("id_material");
-                    });
         });
 
         modelBuilder.Entity<ExhibitCondition>(entity =>
@@ -517,44 +480,6 @@ public partial class MuseumDbContext : DbContext
                 .HasForeignKey(d => d.IdCurator)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKexhs");
-
-            entity.HasMany(d => d.IdExhibits).WithMany(p => p.IdExhibitions)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ExhibitionExhibit",
-                    r => r.HasOne<Exhibit>().WithMany()
-                        .HasForeignKey("IdExhibit")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKexex2"),
-                    l => l.HasOne<Exhibition>().WithMany()
-                        .HasForeignKey("IdExhibition")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKexex1"),
-                    j =>
-                    {
-                        j.HasKey("IdExhibition", "IdExhibit").HasName("exhibition_exhibits_pkey");
-                        j.ToTable("exhibition_exhibits");
-                        j.IndexerProperty<int>("IdExhibition").HasColumnName("id_exhibition");
-                        j.IndexerProperty<int>("IdExhibit").HasColumnName("id_exhibit");
-                    });
-
-            entity.HasMany(d => d.IdHalls).WithMany(p => p.IdExhibitions)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ExhibitionHall",
-                    r => r.HasOne<Hall>().WithMany()
-                        .HasForeignKey("IdHall")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKexh2"),
-                    l => l.HasOne<Exhibition>().WithMany()
-                        .HasForeignKey("IdExhibition")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKexh1"),
-                    j =>
-                    {
-                        j.HasKey("IdExhibition", "IdHall").HasName("exhibition_halls_pkey");
-                        j.ToTable("exhibition_halls");
-                        j.IndexerProperty<int>("IdExhibition").HasColumnName("id_exhibition");
-                        j.IndexerProperty<int>("IdHall").HasColumnName("id_hall");
-                    });
         });
 
         modelBuilder.Entity<ExhibitionTicket>(entity =>

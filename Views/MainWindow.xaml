@@ -1,295 +1,75 @@
 <Window x:Class="MuseumApp.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
         Title="ИС Музейный комплекс"
+        MinWidth="960" MinHeight="600"
         ResizeMode="CanResize">
-    <Grid Margin="12">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TabControl x:Name="mainTabs" Grid.Row="0">
-            <TabItem x:Name="tabExhibitions" Header="Выставки">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_exhibitions" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelExhibitionContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_exhibitions" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_exhibitions_Click"/>
-                        <Button x:Name="btn_change_exhibitions" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_exhibitions_Click"/>
+
+        <Border Grid.Row="0" Padding="12,10" BorderBrush="#DDDDDD" BorderThickness="0,0,0,1">
+            <Grid>
+                <TextBlock x:Name="txtUserHeader" VerticalAlignment="Center" FontSize="14"/>
+                <Button x:Name="btnLogout" Content="Выйти"
+                        HorizontalAlignment="Right" Height="32" MinWidth="100"
+                        Click="btnLogout_Click"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" MinWidth="220"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Grid.Column="0" Margin="12,12,0,12">
+                <TextBox x:Name="txtSearch" DockPanel.Dock="Top" Margin="0,0,0,8"
+                         ToolTip="Поиск таблицы"
+                         TextChanged="txtSearch_TextChanged"/>
+                <TreeView x:Name="treeTables" SelectedItemChanged="treeTables_SelectedItemChanged"/>
+            </DockPanel>
+
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Background="Transparent"/>
+
+            <Grid Grid.Column="2" Margin="8,12,12,12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,8">
+                    <TextBlock x:Name="txtTableTitle" FontSize="20" FontWeight="SemiBold"
+                               VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="btnAdd" Content="Добавить"
+                                Height="32" MinWidth="110" Margin="0,0,8,0" Click="btnAdd_Click"/>
+                        <Button x:Name="btnEdit" Content="Изменить"
+                                Height="32" MinWidth="110" Margin="0,0,8,0" Click="btnEdit_Click"/>
+                        <Button x:Name="btnDelete" Content="Удалить"
+                                Height="32" MinWidth="110" Click="btnDelete_Click"/>
                     </StackPanel>
                 </Grid>
-            </TabItem>
-            <TabItem x:Name="tabExhibits" Header="Экспонаты">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_exhibits" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelExhibitContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_exhibits" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_exhibits_Click"/>
-                        <Button x:Name="btn_change_exhibits" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_exhibits_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="tabCollections" Header="Коллекции">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_collections" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelCollectionContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_collections" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_collections_Click"/>
-                        <Button x:Name="btn_change_collections" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_collections_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="tabHalls" Header="Залы">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_halls" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelHallContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_halls" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_halls_Click"/>
-                        <Button x:Name="btn_change_halls" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_halls_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="tabAuthors" Header="Авторы">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_authors" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelAuthorContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_authors" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_authors_Click"/>
-                        <Button x:Name="btn_change_authors" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_authors_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="tabVisitors" Header="Посетители">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_visitors" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelVisitorContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_visitors" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_visitors_Click"/>
-                        <Button x:Name="btn_change_visitors" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_visitors_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="tabExhibitionTickets" Header="Билеты на выставки">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_exhibitionTickets" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelExhibitionTicketContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Label Content="От:" VerticalAlignment="Center"/>
-                        <DatePicker x:Name="dpTicketFrom" Width="130" Margin="4,0,12,0"/>
-                        <Label Content="До:" VerticalAlignment="Center"/>
-                        <DatePicker x:Name="dpTicketTo" Width="130" Margin="4,0,12,0"/>
-                        <Button x:Name="btn_find_tickets" Content="Найти"
-                                Height="32" MinWidth="100" Click="btn_find_tickets_Click"/>
-                        <Button x:Name="btn_show_all_tickets" Content="Показать все"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_show_all_tickets_Click"/>
-                    </StackPanel>
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_exhibitionTickets" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_exhibitionTickets_Click"/>
-                        <Button x:Name="btn_change_exhibitionTickets" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_exhibitionTickets_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="tabExcursionTickets" Header="Билеты на экскурсии">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_excursionTickets" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelExcursionTicketContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_excursionTickets" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_excursionTickets_Click"/>
-                        <Button x:Name="btn_change_excursionTickets" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_excursionTickets_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="tabExcursions" Header="Экскурсии">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_excursions" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelExcursionContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_excursions" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_excursions_Click"/>
-                        <Button x:Name="btn_change_excursions" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_excursions_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="tabPrivileges" Header="Льготы">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_privileges" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelPrivilegeContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_privileges" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_privileges_Click"/>
-                        <Button x:Name="btn_change_privileges" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_privileges_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="tabEmployees" Header="Сотрудники">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_employees" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelEmployeeContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_employees" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_employees_Click"/>
-                        <Button x:Name="btn_change_employees" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_employees_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="tabEvents" Header="Мероприятия">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="dg_events" Grid.Row="0"
-                              AutoGenerateColumns="True" IsReadOnly="True" CanUserAddRows="False">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Удалить" Click="DelEventContext"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button x:Name="btn_add_events" Content="Добавить"
-                                Height="32" MinWidth="120" Click="btn_add_events_Click"/>
-                        <Button x:Name="btn_change_events" Content="Изменить"
-                                Height="32" MinWidth="120" Margin="8,0,0,0" Click="btn_change_events_Click"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-  </TabControl>
-        <Button x:Name="btnLogout" Grid.Row="1" Content="Выйти"
-                Height="32" MinWidth="120" Margin="0,8,0,0"
-                HorizontalAlignment="Right" Click="btnLogout_Click"/>
+
+                <StackPanel x:Name="panelTicketFilter" Grid.Row="1" Orientation="Horizontal"
+                            Margin="0,0,0,8" Visibility="Collapsed">
+                    <Label Content="Период с:" VerticalAlignment="Center"/>
+                    <DatePicker x:Name="dpTicketFrom" Width="130" Margin="4,0,12,0"/>
+                    <Label Content="по:" VerticalAlignment="Center"/>
+                    <DatePicker x:Name="dpTicketTo" Width="130" Margin="4,0,12,0"/>
+                    <Button Content="Найти" Height="32" MinWidth="90" Click="btnFilterTickets_Click"/>
+                    <Button Content="Сбросить" Height="32" MinWidth="90" Margin="8,0,0,0"
+                            Click="btnResetTickets_Click"/>
+                </StackPanel>
+
+                <DataGrid x:Name="dgData" Grid.Row="2"
+                          AutoGenerateColumns="True" IsReadOnly="True"
+                          CanUserAddRows="False" SelectionMode="Single"/>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

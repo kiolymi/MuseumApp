@@ -26,21 +26,6 @@
     <Compile Update="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\MainWindow.Load.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\MainWindow.AddHandlers.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\MainWindow.EditHandlers.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\MainWindow.DeleteHandlers.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\MainWindow.DateHandlers.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
