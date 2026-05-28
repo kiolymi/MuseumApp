@@ -42,7 +42,7 @@ public partial class AddPrivilegeWindow : Window
         }
         catch (Exception ex)
         {
-            DbErrorHelper.Show(ex);
+            MessageBox.Show(DbExceptionHelper.GetMessage(ex));
         }
     }
 }

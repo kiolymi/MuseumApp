@@ -13,10 +13,25 @@ public partial class LoginWindow : Window
 
     private void btnLogin_Click(object sender, RoutedEventArgs e)
     {
+        var login = txtLogin.Text.Trim();
+        if (string.IsNullOrEmpty(login))
+        {
+            MessageBox.Show("Введите логин.");
+            return;
+        }
+
+        if (!RoleHelper.IsKnownLogin(login))
+        {
+            MessageBox.Show("Такой учетной записи не существует", "Ошибка входа",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         try
         {
-            SessionUser.Login = txtLogin.Text.Trim();
+            SessionUser.Login = login;
             SessionUser.Password = txtPassword.Password;
+            SessionUser.Role = RoleHelper.ResolveRole(login);
 
             if (string.IsNullOrWhiteSpace(SessionUser.Login))
             {

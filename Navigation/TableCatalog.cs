@@ -2,69 +2,115 @@ namespace MuseumApp.Navigation;
 
 public static class TableCatalog
 {
-  private static readonly TableAccessLevel A = TableAccessLevel.Write;
-  private static readonly TableAccessLevel Cw = TableAccessLevel.Write;
-  private static readonly TableAccessLevel Cr = TableAccessLevel.Read;
-  private static readonly TableAccessLevel N = TableAccessLevel.None;
+    private static readonly TableDefinition[] All =
+    [
+        Def(TableId.Adresses, "Адреса", AdminFull),
+        Def(TableId.Authors, "Авторы", CuratorFull),
+        Def(TableId.Branches, "Филиалы", AdminFull),
+        Def(TableId.Collections, "Коллекции", CuratorFull),
+        Def(TableId.Companies, "Компании", AdminFull),
+        Def(TableId.Countries, "Страны", AdminFull),
+        Def(TableId.Employees, "Сотрудники", AdminFull),
+        Def(TableId.Events, "Мероприятия", AdminFull),
+        Def(TableId.EventTickets, "Билеты на мероприятия", AdminFull),
+        Def(TableId.Excursions, "Экскурсии", CashierExcursionFull),
+        Def(TableId.ExcursionTickets, "Билеты на экскурсии", CashierTicketFull),
+        Def(TableId.Exhibits, "Экспонаты", CuratorFull),
+        Def(TableId.ExhibitConditions, "Состояния экспонатов", AdminFull),
+        Def(TableId.ExhibitMovements, "Перемещения экспонатов", AdminFull),
+        Def(TableId.Exhibitions, "Выставки", CuratorExhibitionAccess),
+        Def(TableId.ExhibitionTickets, "Билеты на выставки", CashierTicketFull),
+        Def(TableId.Halls, "Залы", CuratorFull),
+        Def(TableId.Inventories, "Инвентаризация", AdminFull),
+        Def(TableId.Materials, "Материалы", AdminFull),
+        Def(TableId.Museums, "Музеи", AdminFull),
+        Def(TableId.Positions, "Должности", AdminFull),
+        Def(TableId.Privileges, "Льготы", CashierPrivilegeFull),
+        Def(TableId.Products, "Товары", AdminFull),
+        Def(TableId.Reasons, "Причины", AdminFull),
+        Def(TableId.Restorations, "Реставрации", AdminFull),
+        Def(TableId.Reviews, "Отзывы", AdminFull),
+        Def(TableId.Shops, "Магазины", AdminFull),
+        Def(TableId.Storages, "Хранилища", AdminFull),
+        Def(TableId.Visitors, "Посетители", CashierVisitorFull),
+        Def(TableId.VwActiveExhibitions, "Представление: активные выставки", AdminRead),
+        Def(TableId.VwEmployeeDuties, "Представление: дежурства сотрудников", AdminRead),
+        Def(TableId.VwExhibitFullInfos, "Представление: экспонаты (полная информация)", AdminRead),
+        Def(TableId.VwProductStocks, "Представление: остатки товаров", AdminRead),
+        Def(TableId.VwStorageOccupancies, "Представление: заполненность хранилищ", AdminRead),
+        Def(TableId.VwVisitorHistories, "Представление: история посетителей", AdminRead),
+    ];
 
-  public static IReadOnlyList<TableDefinition> All { get; } =
-  [
-    Def(TableId.Adresses, "Адреса", "adresses", A, N, N),
-    Def(TableId.Countries, "Страны", "countries", A, N, N),
-    Def(TableId.Materials, "Материалы", "materials", A, N, N),
-    Def(TableId.Positions, "Должности", "positions", A, N, N),
-    Def(TableId.Privileges, "Льготы", "privileges", A, N, Cw),
-    Def(TableId.Reasons, "Причины перемещений", "reasons", A, N, N),
-    Def(TableId.ExhibitConditions, "Состояния экспонатов", "exhibit_conditions", A, Cw, N),
-    Def(TableId.Authors, "Авторы", "authors", A, Cw, N),
-    Def(TableId.Employees, "Сотрудники", "employees", A, N, N),
-    Def(TableId.Museum, "Музеи", "museum", A, N, N),
-    Def(TableId.Branches, "Филиалы", "branches", A, N, N),
-    Def(TableId.Storages, "Хранилища", "storages", A, N, N),
-    Def(TableId.Collections, "Коллекции", "collections", A, Cw, N),
-    Def(TableId.Exhibits, "Экспонаты", "exhibits", A, Cw, N),
-    Def(TableId.Exhibitions, "Выставки", "exhibitions", A, Cw, Cr),
-    Def(TableId.Halls, "Залы", "halls", A, Cw, N),
-    Def(TableId.Visitors, "Посетители", "visitors", A, N, Cw),
-    Def(TableId.AuthorEx, "Связь автор — экспонат", "author_ex", A, N, N),
-    Def(TableId.Excursions, "Экскурсии", "excursions", A, N, Cr),
-    Def(TableId.ExhibitionExhibits, "Связь выставка — экспонат", "exhibition_exhibits", A, Cw, N),
-    Def(TableId.ExhibitionHalls, "Связь выставка — зал", "exhibition_halls", A, Cw, N),
-    Def(TableId.ExhibitionTickets, "Билеты на выставки", "exhibition_tickets", A, N, Cw),
-    Def(TableId.ExhibitMaterials, "Материалы экспонатов", "exhibit_materials", A, N, N),
-    Def(TableId.ExhibitMovements, "Перемещения экспонатов", "exhibit_movements", A, N, N),
-    Def(TableId.Restorations, "Реставрации", "restorations", A, N, N),
-    Def(TableId.ExcursionTickets, "Билеты на экскурсии", "excursion_tickets", A, N, Cw),
-    Def(TableId.Reviews, "Отзывы", "reviews", A, N, N),
-    Def(TableId.Events, "Мероприятия", "events", A, N, N),
-    Def(TableId.EventTickets, "Билеты на мероприятия", "event_tickets", A, N, N),
-    Def(TableId.Shops, "Магазины", "shops", A, N, N),
-    Def(TableId.Companies, "Компании-поставщики", "companies", A, N, N),
-    Def(TableId.Products, "Товары", "products", A, N, N),
-    Def(TableId.Inventory, "Остатки в магазинах", "inventory", A, N, N)
-  ];
+    public static IReadOnlyList<TableTreeItem> GetTreeItems(string role) =>
+        All.Select(d => new TableTreeItem
+        {
+            Title = d.Title,
+            TableId = d.Id,
+            Access = d.GetAccess(role)
+        })
+        .Where(i => i.Access != TableAccessLevel.Hidden)
+        .OrderBy(i => i.Title, StringComparer.CurrentCultureIgnoreCase)
+        .ToList();
 
-  public static IEnumerable<TableDefinition> ForRole(string role) =>
-    All.Where(t => t.CanRead(role));
+    public static TableAccessLevel GetAccess(TableId id, string role) =>
+        All.FirstOrDefault(d => d.Id == id)?.GetAccess(role) ?? TableAccessLevel.Hidden;
 
-  public static TableDefinition? Find(TableId id) => All.FirstOrDefault(t => t.Id == id);
-
-  public static bool IsLinkTable(TableId id) => id is
-      TableId.AuthorEx
-      or TableId.ExhibitionExhibits
-      or TableId.ExhibitionHalls
-      or TableId.ExhibitMaterials;
-
-  private static TableDefinition Def(
-    TableId id, string title, string dbName,
-    TableAccessLevel admin, TableAccessLevel curator, TableAccessLevel cashier) =>
-    new()
+    public static bool SupportsCrud(TableId id) => id switch
     {
-      Id = id,
-      Title = title,
-      DbName = dbName,
-      Admin = admin,
-      Curator = curator,
-      Cashier = cashier
+        TableId.VwActiveExhibitions or TableId.VwEmployeeDuties or TableId.VwExhibitFullInfos
+            or TableId.VwProductStocks or TableId.VwStorageOccupancies or TableId.VwVisitorHistories => false,
+        _ => true
+    };
+
+    private static TableDefinition Def(TableId id, string title, Func<string, TableAccessLevel> getAccess) =>
+        new() { Id = id, Title = title, GetAccess = getAccess };
+
+    private static TableAccessLevel AdminFull(string role) =>
+        role == "admin_museum" ? TableAccessLevel.Full : TableAccessLevel.Hidden;
+
+    private static TableAccessLevel AdminRead(string role) =>
+        role == "admin_museum" ? TableAccessLevel.ReadOnly : TableAccessLevel.Hidden;
+
+    private static TableAccessLevel CuratorFull(string role) => role switch
+    {
+        "admin_museum" => TableAccessLevel.Full,
+        "curator_museum" => TableAccessLevel.Full,
+        _ => TableAccessLevel.Hidden
+    };
+
+    private static TableAccessLevel CuratorExhibitionAccess(string role) => role switch
+    {
+        "admin_museum" => TableAccessLevel.Full,
+        "curator_museum" => TableAccessLevel.Full,
+        "cashier_museum" => TableAccessLevel.ReadOnly,
+        _ => TableAccessLevel.Hidden
+    };
+
+    private static TableAccessLevel CashierTicketFull(string role) => role switch
+    {
+        "admin_museum" => TableAccessLevel.Full,
+        "cashier_museum" => TableAccessLevel.Full,
+        _ => TableAccessLevel.Hidden
+    };
+
+    private static TableAccessLevel CashierExcursionFull(string role) => role switch
+    {
+        "admin_museum" => TableAccessLevel.Full,
+        "cashier_museum" => TableAccessLevel.ReadOnly,
+        _ => TableAccessLevel.Hidden
+    };
+
+    private static TableAccessLevel CashierVisitorFull(string role) => role switch
+    {
+        "admin_museum" => TableAccessLevel.Full,
+        "cashier_museum" => TableAccessLevel.Full,
+        _ => TableAccessLevel.Hidden
+    };
+
+    private static TableAccessLevel CashierPrivilegeFull(string role) => role switch
+    {
+        "admin_museum" => TableAccessLevel.Full,
+        "cashier_museum" => TableAccessLevel.Full,
+        _ => TableAccessLevel.Hidden
     };
 }

@@ -2,7 +2,9 @@ namespace MuseumApp.Navigation;
 
 public sealed class TableTreeItem
 {
-    public required TableDefinition Definition { get; init; }
+    public required string Title { get; init; }
+    public required TableId TableId { get; init; }
+    public TableAccessLevel Access { get; init; }
 
-    public string SearchText => $"{Definition.Title} {Definition.DbName}";
+    public override string ToString() => Title;
 }

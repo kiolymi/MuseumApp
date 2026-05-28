@@ -9,188 +9,80 @@ namespace MuseumApp.Views;
 
 public partial class MainWindow : Window
 {
-    private TableDefinition? _currentTable;
-    private readonly List<TableTreeItem> _allTreeItems = [];
+    private TableId? _currentTableId;
+    private TableAccessLevel _currentAccess = TableAccessLevel.Hidden;
 
     public MainWindow()
     {
         InitializeComponent();
-        txtUserHeader.Text = SessionUser.HeaderText;
-        Title = $"ИС Музейный комплекс — {SessionUser.HeaderText}";
 
-        dgData.AutoGeneratingColumn += DataGrid_AutoGeneratingColumn;
+        txtUser.Text = SessionUser.Login;
+        txtRole.Text = RoleHelper.GetDisplayName(SessionUser.Role);
+        Title = $"ИС Музейный комплекс — {txtUser.Text} ({txtRole.Text})";
 
-        dpTicketFrom.SelectedDate = new DateTime(2024, 1, 1);
-        dpTicketTo.SelectedDate = new DateTime(2024, 12, 31);
+        dgMain.AutoGeneratingColumn += DataGrid_AutoGeneratingColumn;
 
-        BuildTree();
+        foreach (var item in TableCatalog.GetTreeItems(SessionUser.Role))
+            treeTables.Items.Add(item);
+
+        treeTables.Loaded += (_, _) => SelectFirstTreeItem();
     }
 
-    private void BuildTree(string? filter = null)
+    private void SelectFirstTreeItem()
     {
-        _allTreeItems.Clear();
-        foreach (var def in TableCatalog.ForRole(SessionUser.Role))
-            _allTreeItems.Add(new TableTreeItem { Definition = def });
+        if (treeTables.Items.Count == 0)
+            return;
 
-        treeTables.Items.Clear();
-        var q = string.IsNullOrWhiteSpace(filter)
-            ? _allTreeItems
-            : _allTreeItems.Where(i =>
-                i.SearchText.Contains(filter.Trim(), StringComparison.OrdinalIgnoreCase));
-
-        foreach (var item in q)
+        treeTables.UpdateLayout();
+        if (treeTables.ItemContainerGenerator.ContainerFromIndex(0) is TreeViewItem tvi)
         {
-            var node = new TreeViewItem
-            {
-                Header = item.Definition.Title,
-                Tag = item
-            };
-            treeTables.Items.Add(node);
+            tvi.IsSelected = true;
+            tvi.BringIntoView();
         }
-
-        if (treeTables.Items.Count > 0)
-            ((TreeViewItem)treeTables.Items[0]).IsSelected = true;
-        else
-            ClearGrid();
     }
-
-    private void txtSearch_TextChanged(object sender, TextChangedEventArgs e) =>
-        BuildTree(txtSearch.Text);
 
     private void treeTables_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
-        if (treeTables.SelectedItem is not TreeViewItem { Tag: TableTreeItem item })
-            return;
-
-        _currentTable = item.Definition;
-        txtTableTitle.Text = $"{item.Definition.Title}  ({item.Definition.DbName})";
-
-        var def = item.Definition;
-        var canWrite = def.CanWrite(SessionUser.Role);
-
-        btnAdd.Visibility = canWrite ? Visibility.Visible : Visibility.Collapsed;
-        btnEdit.Visibility = canWrite && !TableCatalog.IsLinkTable(def.Id)
-            ? Visibility.Visible
-            : Visibility.Collapsed;
-        btnDelete.Visibility = def.CanDelete(SessionUser.Role)
-            ? Visibility.Visible
-            : Visibility.Collapsed;
-
-        panelTicketFilter.Visibility = item.Definition.Id == TableId.ExhibitionTickets
-            ? Visibility.Visible
-            : Visibility.Collapsed;
-
-        ReloadGrid();
+        if (e.NewValue is TableTreeItem item)
+            ShowTable(item);
     }
 
-    private void ReloadGrid()
+    private void ShowTable(TableTreeItem item)
     {
-        if (_currentTable == null)
-            return;
-
-        try
-        {
-            DateOnly? from = null;
-            DateOnly? to = null;
-            if (_currentTable.Id == TableId.ExhibitionTickets
-                && dpTicketFrom.SelectedDate.HasValue
-                && dpTicketTo.SelectedDate.HasValue)
-            {
-                from = DateOnly.FromDateTime(dpTicketFrom.SelectedDate.Value);
-                to = DateOnly.FromDateTime(dpTicketTo.SelectedDate.Value);
-            }
-
-            dgData.ItemsSource = TableDataService.Load(_currentTable.Id, from, to);
-        }
-        catch (Exception ex)
-        {
-            DbErrorHelper.Show(ex);
-        }
+        _currentTableId = item.TableId;
+        _currentAccess = item.Access;
+        UpdateCrudButtons();
+        LoadCurrentTable();
     }
 
-    private void ClearGrid()
+    private void UpdateCrudButtons()
     {
-        _currentTable = null;
-        txtTableTitle.Text = "";
-        dgData.ItemsSource = null;
-        btnAdd.Visibility = Visibility.Collapsed;
-        btnEdit.Visibility = Visibility.Collapsed;
-        btnDelete.Visibility = Visibility.Collapsed;
-        panelTicketFilter.Visibility = Visibility.Collapsed;
+        var canWrite = _currentAccess == TableAccessLevel.Full
+                       && _currentTableId.HasValue
+                       && TableCatalog.SupportsCrud(_currentTableId.Value);
+
+        var visibility = canWrite ? Visibility.Visible : Visibility.Collapsed;
+        btnAdd.Visibility = visibility;
+        btnEdit.Visibility = visibility;
+        btnDelete.Visibility = visibility;
     }
 
-    private void btnAdd_Click(object sender, RoutedEventArgs e)
+    public void LoadCurrentTable()
     {
-        if (_currentTable == null) return;
-        if (TableCrudService.TryAdd(_currentTable.Id, this))
-            ReloadGrid();
-    }
-
-    private void btnEdit_Click(object sender, RoutedEventArgs e)
-    {
-        if (_currentTable == null || dgData.SelectedItem == null)
-        {
-            MessageBox.Show("Выберите запись в таблице.");
-            return;
-        }
-
-        if (TableCrudService.TryEdit(_currentTable.Id, dgData.SelectedItem, this))
-            ReloadGrid();
-    }
-
-    private void btnDelete_Click(object sender, RoutedEventArgs e)
-    {
-        if (_currentTable == null || dgData.SelectedItem == null)
-        {
-            MessageBox.Show("Выберите запись для удаления.");
-            return;
-        }
-
-        var result = MessageBox.Show(
-            "Удалить выбранную запись?",
-            "Подтверждение",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
-        if (result != MessageBoxResult.Yes)
+        if (_currentTableId is not { } tableId)
             return;
 
         try
         {
-            if (TableDeleteService.Delete(_currentTable.Id, dgData.SelectedItem))
-            {
-                ReloadGrid();
-                MessageBox.Show("Удалено");
-            }
+            dgMain.ItemsSource = TableDataService.Load(tableId) as System.Collections.IEnumerable;
         }
         catch (Exception ex)
         {
-            DbErrorHelper.Show(ex);
+            MessageBox.Show("Ошибка загрузки: " + ex.Message);
         }
     }
 
-    private void btnFilterTickets_Click(object sender, RoutedEventArgs e)
-    {
-        if (dpTicketFrom.SelectedDate == null || dpTicketTo.SelectedDate == null)
-        {
-            MessageBox.Show("Выберите даты периода.");
-            return;
-        }
-
-        if (dpTicketFrom.SelectedDate > dpTicketTo.SelectedDate)
-        {
-            MessageBox.Show("Дата «с» не может быть позже даты «по».");
-            return;
-        }
-
-        ReloadGrid();
-    }
-
-    private void btnResetTickets_Click(object sender, RoutedEventArgs e)
-    {
-        dpTicketFrom.SelectedDate = new DateTime(2024, 1, 1);
-        dpTicketTo.SelectedDate = new DateTime(2024, 12, 31);
-        ReloadGrid();
-    }
+    public void Load() => LoadCurrentTable();
 
     private void btnLogout_Click(object sender, RoutedEventArgs e)
     {
