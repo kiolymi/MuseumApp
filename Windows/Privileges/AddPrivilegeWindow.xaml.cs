@@ -1,6 +1,7 @@
 using System.Windows;
 using MuseumApp.Data;
 using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
 
 namespace MuseumApp.Windows.Privileges;
 
@@ -30,7 +31,7 @@ public partial class AddPrivilegeWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show(DbExceptionHelper.GetMessage(ex));
         }
     }
 }

@@ -2,6 +2,16 @@ namespace MuseumApp.Helpers;
 
 public static class RoleHelper
 {
+    private static readonly HashSet<string> KnownLogins = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "ivanov", "admin_museum",
+        "petrova", "curator_museum",
+        "pavlov", "cashier_museum"
+    };
+
+    public static bool IsKnownLogin(string login) =>
+        KnownLogins.Contains(login.Trim());
+
     public static string ResolveRole(string login)
     {
         return login.Trim().ToLowerInvariant() switch

@@ -20,6 +20,13 @@ public partial class LoginWindow : Window
             return;
         }
 
+        if (!RoleHelper.IsKnownLogin(login))
+        {
+            MessageBox.Show("Такой учетной записи не существует", "Ошибка входа",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         try
         {
             SessionUser.Login = login;

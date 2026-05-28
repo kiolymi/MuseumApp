@@ -60,9 +60,10 @@ public partial class MainWindow : Window
                        && _currentTableId.HasValue
                        && TableCatalog.SupportsCrud(_currentTableId.Value);
 
-        btnAdd.IsEnabled = canWrite;
-        btnEdit.IsEnabled = canWrite;
-        btnDelete.IsEnabled = canWrite;
+        var visibility = canWrite ? Visibility.Visible : Visibility.Collapsed;
+        btnAdd.Visibility = visibility;
+        btnEdit.Visibility = visibility;
+        btnDelete.Visibility = visibility;
     }
 
     public void LoadCurrentTable()

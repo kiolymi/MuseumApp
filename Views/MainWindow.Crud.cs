@@ -1,5 +1,6 @@
 using System.Windows;
 using MuseumApp.Navigation;
+using MuseumApp.Services.Crud;
 
 namespace MuseumApp.Views;
 
@@ -24,6 +25,10 @@ public partial class MainWindow
             case TableId.Privileges: btn_add_privileges_Click(sender, e); break;
             case TableId.Employees: btn_add_employees_Click(sender, e); break;
             case TableId.Events: btn_add_events_Click(sender, e); break;
+            default:
+                if (CrudRegistry.IsGeneric(id))
+                    GenericAdd();
+                break;
         }
     }
 
@@ -46,6 +51,10 @@ public partial class MainWindow
             case TableId.Privileges: btn_change_privileges_Click(sender, e); break;
             case TableId.Employees: btn_change_employees_Click(sender, e); break;
             case TableId.Events: btn_change_events_Click(sender, e); break;
+            default:
+                if (CrudRegistry.IsGeneric(id))
+                    GenericEdit();
+                break;
         }
     }
 
@@ -68,6 +77,10 @@ public partial class MainWindow
             case TableId.Privileges: DelPrivilege(); break;
             case TableId.Employees: DelEmployee(); break;
             case TableId.Events: DelEvent(); break;
+            default:
+                if (CrudRegistry.IsGeneric(id))
+                    GenericDelete();
+                break;
         }
     }
 }

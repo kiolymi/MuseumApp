@@ -57,10 +57,9 @@ public static class TableCatalog
 
     public static bool SupportsCrud(TableId id) => id switch
     {
-        TableId.Exhibitions or TableId.Exhibits or TableId.Collections or TableId.Halls or TableId.Authors
-            or TableId.Visitors or TableId.ExhibitionTickets or TableId.ExcursionTickets or TableId.Excursions
-            or TableId.Privileges or TableId.Employees or TableId.Events => true,
-        _ => false
+        TableId.VwActiveExhibitions or TableId.VwEmployeeDuties or TableId.VwExhibitFullInfos
+            or TableId.VwProductStocks or TableId.VwStorageOccupancies or TableId.VwVisitorHistories => false,
+        _ => true
     };
 
     private static TableDefinition Def(TableId id, string title, Func<string, TableAccessLevel> getAccess) =>
