@@ -14,24 +14,58 @@ public partial class AddExhibitionWindow : Window
         dpEnd.SelectedDate = DateTime.Today.AddDays(7);
 
         if (!ComboLoadHelper.TryLoadEmployeesForAdd(cmbCurator))
+        {
             Close();
+        }
+    }
+
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Dates(dpStart.SelectedDate, dpEnd.SelectedDate);
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbCurator.SelectedValue, "Куратор");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.OptionalSafeText(txtTheme.Text, 255, "Тема");
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var price = InputHelper.ParseDecimal(txtPrice.Text);
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.Dates(dpStart.SelectedDate, dpEnd.SelectedDate),
-                ValidationHelper.Combo(cmbCurator.SelectedValue, "Куратор"),
-                ValidationHelper.NonNegative(price, "Цена"),
-                ValidationHelper.MaxLen(txtTheme.Text, 255, "Тема"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
+                return;
+            }
+
+            var price = InputHelper.ParseDecimal(txtPrice.Text);
+            var priceError = ValidationHelper.NonNegative(price, "Цена");
+            if (priceError != null)
+            {
+                MessageBox.Show(priceError);
                 return;
             }
 
@@ -43,7 +77,7 @@ public partial class AddExhibitionWindow : Window
                 StartDate = dpStart.SelectedDate!.Value,
                 EndDate = dpEnd.SelectedDate!.Value,
                 Price = price,
-                Theme = string.IsNullOrWhiteSpace(txtTheme.Text) ? null : txtTheme.Text.Trim(),
+                Theme = TextHelper.TrimOrNull(txtTheme.Text),
                 IdCurator = (int)cmbCurator.SelectedValue!
             };
             context.Exhibitions.Add(exhibition);

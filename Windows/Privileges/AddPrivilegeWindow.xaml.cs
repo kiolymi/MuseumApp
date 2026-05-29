@@ -12,22 +12,43 @@ public partial class AddPrivilegeWindow : Window
         InitializeComponent();
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        var discount = string.IsNullOrWhiteSpace(txtDiscount.Text)
+            ? null
+            : InputHelper.ParseNullableDouble(txtDiscount.Text);
+
+        error = ValidationHelper.DiscountPercent(discount);
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var discount = string.IsNullOrWhiteSpace(txtDiscount.Text)
-                ? null
-                : InputHelper.ParseNullableDouble(txtDiscount.Text);
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.DiscountPercent(discount));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
                 return;
             }
+
+            var discount = string.IsNullOrWhiteSpace(txtDiscount.Text)
+                ? null
+                : InputHelper.ParseNullableDouble(txtDiscount.Text);
 
             var context = new MuseumDbContext();
             var privilege = new Privilege

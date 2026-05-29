@@ -28,19 +28,48 @@ public partial class AddVisitorWindow : Window
         }
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtLastName.Text, 45, "Фамилия");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.SafeText(txtFirstName.Text, 45, "Имя");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.SafeText(txtMiddleName.Text, 45, "Отчество");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Phone(txtPhone.Text, "Телефон", required: false);
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Email(txtEmail.Text, "Email", required: false);
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtLastName.Text, "Фамилия"),
-                ValidationHelper.NotEmpty(txtFirstName.Text, "Имя"),
-                ValidationHelper.NotEmpty(txtMiddleName.Text, "Отчество"),
-                ValidationHelper.MaxLen(txtLastName.Text, 45, "Фамилия"),
-                ValidationHelper.MaxLen(txtFirstName.Text, 45, "Имя"),
-                ValidationHelper.MaxLen(txtMiddleName.Text, 45, "Отчество"),
-                ValidationHelper.MaxLen(txtPhone.Text, 45, "Телефон"),
-                ValidationHelper.MaxLen(txtEmail.Text, 100, "Email"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
@@ -53,8 +82,8 @@ public partial class AddVisitorWindow : Window
                 LastName = txtLastName.Text.Trim(),
                 FirstName = txtFirstName.Text.Trim(),
                 MiddleName = txtMiddleName.Text.Trim(),
-                Phone = string.IsNullOrWhiteSpace(txtPhone.Text) ? null : txtPhone.Text,
-                Email = string.IsNullOrWhiteSpace(txtEmail.Text) ? null : txtEmail.Text,
+                Phone = TextHelper.TrimOrNull(txtPhone.Text),
+                Email = TextHelper.TrimOrNull(txtEmail.Text),
                 IdPrivilege = cmbPrivilege.SelectedValue as int?
             };
             context.Visitors.Add(visitor);

@@ -20,26 +20,55 @@ public partial class EditHallWindow : Window
         ComboLoadHelper.LoadBranches(cmbBranch, selected.IdBranch);
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал");
+        if (error != null)
+        {
+            return error;
+        }
+
+        var capacity = InputHelper.ParseNullableInt(txtCapacity.Text);
+        if (capacity.HasValue)
+        {
+            error = ValidationHelper.Positive(capacity.Value, "Вместимость");
+            if (error != null)
+            {
+                return error;
+            }
+        }
+
+        return null;
+    }
+
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var capacity = InputHelper.ParseNullableInt(txtCapacity.Text);
-            var area = InputHelper.ParseNullableDouble(txtArea.Text);
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал"),
-                capacity.HasValue ? ValidationHelper.Positive(capacity.Value, "Вместимость") : null);
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
                 return;
             }
 
+            var capacity = InputHelper.ParseNullableInt(txtCapacity.Text);
+            var area = InputHelper.ParseNullableDouble(txtArea.Text);
+
             var context = new MuseumDbContext();
             var item = context.Halls.Find(_id);
-            if (item == null) return;
+            if (item == null)
+            {
+                return;
+            }
 
             item.HallName = txtName.Text.Trim();
             item.IdBranch = (int)cmbBranch.SelectedValue!;

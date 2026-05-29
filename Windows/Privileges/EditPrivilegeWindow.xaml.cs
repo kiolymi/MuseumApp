@@ -17,26 +17,50 @@ public partial class EditPrivilegeWindow : Window
         txtDiscount.Text = selected.DiscountRate?.ToString() ?? "";
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        var discount = string.IsNullOrWhiteSpace(txtDiscount.Text)
+            ? null
+            : InputHelper.ParseNullableDouble(txtDiscount.Text);
+
+        error = ValidationHelper.DiscountPercent(discount);
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var discount = string.IsNullOrWhiteSpace(txtDiscount.Text)
-                ? null
-                : InputHelper.ParseNullableDouble(txtDiscount.Text);
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.DiscountPercent(discount));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
                 return;
             }
 
+            var discount = string.IsNullOrWhiteSpace(txtDiscount.Text)
+                ? null
+                : InputHelper.ParseNullableDouble(txtDiscount.Text);
+
             var context = new MuseumDbContext();
             var item = context.Privileges.Find(_id);
-            if (item == null) return;
+            if (item == null)
+            {
+                return;
+            }
 
             item.PrivilegeName = txtName.Text.Trim();
             item.DiscountRate = discount;

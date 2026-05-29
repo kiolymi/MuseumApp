@@ -13,24 +13,65 @@ public partial class AddEmployeeWindow : Window
         dpBirthDate.SelectedDate = DateTime.Today.AddYears(-30);
 
         if (!ComboLoadHelper.TryLoadPositionsForAdd(cmbPosition))
+        {
             Close();
+        }
+    }
+
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtLastName.Text, 45, "Фамилия");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.SafeText(txtFirstName.Text, 45, "Имя");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.SafeText(txtMiddleName.Text, 45, "Отчество");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Phone(txtPhone.Text, "Телефон", required: false);
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.OptionalSafeText(txtEducation.Text, 45, "Образование");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbPosition.SelectedValue, "Должность");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.BirthDate(dpBirthDate.SelectedDate);
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtLastName.Text, "Фамилия"),
-                ValidationHelper.NotEmpty(txtFirstName.Text, "Имя"),
-                ValidationHelper.NotEmpty(txtMiddleName.Text, "Отчество"),
-                ValidationHelper.MaxLen(txtLastName.Text, 45, "Фамилия"),
-                ValidationHelper.MaxLen(txtFirstName.Text, 45, "Имя"),
-                ValidationHelper.MaxLen(txtMiddleName.Text, 45, "Отчество"),
-                ValidationHelper.MaxLen(txtPhone.Text, 45, "Телефон"),
-                ValidationHelper.MaxLen(txtEducation.Text, 45, "Образование"),
-                ValidationHelper.Combo(cmbPosition.SelectedValue, "Должность"),
-                ValidationHelper.BirthDate(dpBirthDate.SelectedDate));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
@@ -44,9 +85,9 @@ public partial class AddEmployeeWindow : Window
                 FirstName = txtFirstName.Text.Trim(),
                 MiddleName = txtMiddleName.Text.Trim(),
                 IdPosition = (int)cmbPosition.SelectedValue!,
-                Phone = string.IsNullOrWhiteSpace(txtPhone.Text) ? null : txtPhone.Text,
+                Phone = TextHelper.TrimOrNull(txtPhone.Text),
                 BirthDate = DateOnly.FromDateTime(dpBirthDate.SelectedDate!.Value),
-                EducationLevel = string.IsNullOrWhiteSpace(txtEducation.Text) ? null : txtEducation.Text.Trim()
+                EducationLevel = TextHelper.TrimOrNull(txtEducation.Text)
             };
             context.Employees.Add(employee);
             context.SaveChanges();

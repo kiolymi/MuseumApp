@@ -20,26 +20,66 @@ public partial class AddEventWindow : Window
         }
 
         if (!ComboLoadHelper.TryLoadEmployeesForAdd(cmbEmployee))
+        {
             Close();
+        }
+    }
+
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbEmployee.SelectedValue, "Сотрудник");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.VisitDate(dpEventDate.SelectedDate);
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var duration = InputHelper.ParseInt(txtDuration.Text);
-            var price = InputHelper.ParseDecimal(txtPrice.Text);
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал"),
-                ValidationHelper.Combo(cmbEmployee.SelectedValue, "Сотрудник"),
-                ValidationHelper.VisitDate(dpEventDate.SelectedDate),
-                ValidationHelper.Positive(duration, "Длительность"),
-                ValidationHelper.NonNegative(price, "Цена"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
+                return;
+            }
+
+            var duration = InputHelper.ParseInt(txtDuration.Text);
+            var durationError = ValidationHelper.Positive(duration, "Длительность");
+            if (durationError != null)
+            {
+                MessageBox.Show(durationError);
+                return;
+            }
+
+            var price = InputHelper.ParseDecimal(txtPrice.Text);
+            var priceError = ValidationHelper.NonNegative(price, "Цена");
+            if (priceError != null)
+            {
+                MessageBox.Show(priceError);
                 return;
             }
 

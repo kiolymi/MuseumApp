@@ -23,8 +23,14 @@ public partial class AddExhibitionTicketWindow : Window
                 .Select(e => new { Id = e.IdExhibition, Name = e.ExhibitionName })
                 .ToList();
 
-            if (cmbVisitor.Items.Count > 0) cmbVisitor.SelectedIndex = 0;
-            if (cmbExhibition.Items.Count > 0) cmbExhibition.SelectedIndex = 0;
+            if (cmbVisitor.Items.Count > 0)
+            {
+                cmbVisitor.SelectedIndex = 0;
+            }
+            if (cmbExhibition.Items.Count > 0)
+            {
+                cmbExhibition.SelectedIndex = 0;
+            }
         }
         catch (Exception ex)
         {
@@ -33,14 +39,36 @@ public partial class AddExhibitionTicketWindow : Window
         }
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.Combo(cmbVisitor.SelectedValue, "Посетитель");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbExhibition.SelectedValue, "Выставка");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.VisitDate(dpVisitDate.SelectedDate);
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var error = ValidationHelper.First(
-                ValidationHelper.Combo(cmbVisitor.SelectedValue, "Посетитель"),
-                ValidationHelper.Combo(cmbExhibition.SelectedValue, "Выставка"),
-                ValidationHelper.VisitDate(dpVisitDate.SelectedDate));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);

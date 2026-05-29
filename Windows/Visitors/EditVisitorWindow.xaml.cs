@@ -36,19 +36,48 @@ public partial class EditVisitorWindow : Window
         }
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtLastName.Text, 45, "Фамилия");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.SafeText(txtFirstName.Text, 45, "Имя");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.SafeText(txtMiddleName.Text, 45, "Отчество");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Phone(txtPhone.Text, "Телефон", required: false);
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Email(txtEmail.Text, "Email", required: false);
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtLastName.Text, "Фамилия"),
-                ValidationHelper.NotEmpty(txtFirstName.Text, "Имя"),
-                ValidationHelper.NotEmpty(txtMiddleName.Text, "Отчество"),
-                ValidationHelper.MaxLen(txtLastName.Text, 45, "Фамилия"),
-                ValidationHelper.MaxLen(txtFirstName.Text, 45, "Имя"),
-                ValidationHelper.MaxLen(txtMiddleName.Text, 45, "Отчество"),
-                ValidationHelper.MaxLen(txtPhone.Text, 45, "Телефон"),
-                ValidationHelper.MaxLen(txtEmail.Text, 100, "Email"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
@@ -57,13 +86,16 @@ public partial class EditVisitorWindow : Window
 
             var context = new MuseumDbContext();
             var item = context.Visitors.Find(_id);
-            if (item == null) return;
+            if (item == null)
+            {
+                return;
+            }
 
             item.LastName = txtLastName.Text.Trim();
             item.FirstName = txtFirstName.Text.Trim();
             item.MiddleName = txtMiddleName.Text.Trim();
-            item.Phone = string.IsNullOrWhiteSpace(txtPhone.Text) ? null : txtPhone.Text;
-            item.Email = string.IsNullOrWhiteSpace(txtEmail.Text) ? null : txtEmail.Text;
+            item.Phone = TextHelper.TrimOrNull(txtPhone.Text);
+            item.Email = TextHelper.TrimOrNull(txtEmail.Text);
             item.IdPrivilege = cmbPrivilege.SelectedValue as int?;
 
             context.SaveChanges();

@@ -25,9 +25,18 @@ public partial class AddExhibitWindow : Window
             cmbCondition.ItemsSource = context.ExhibitConditions
                 .Select(c => new { Id = c.IdCondition, Name = c.ConditionName })
                 .ToList();
-            if (cmbCollection.Items.Count > 0) cmbCollection.SelectedIndex = 0;
-            if (cmbAuthor.Items.Count > 0) cmbAuthor.SelectedIndex = 0;
-            if (cmbCondition.Items.Count > 0) cmbCondition.SelectedIndex = 0;
+            if (cmbCollection.Items.Count > 0)
+            {
+                cmbCollection.SelectedIndex = 0;
+            }
+            if (cmbAuthor.Items.Count > 0)
+            {
+                cmbAuthor.SelectedIndex = 0;
+            }
+            if (cmbCondition.Items.Count > 0)
+            {
+                cmbCondition.SelectedIndex = 0;
+            }
         }
         catch (Exception ex)
         {
@@ -36,15 +45,36 @@ public partial class AddExhibitWindow : Window
         }
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbCollection.SelectedValue, "Коллекция");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbCondition.SelectedValue, "Состояние");
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.Combo(cmbCollection.SelectedValue, "Коллекция"),
-                ValidationHelper.Combo(cmbCondition.SelectedValue, "Состояние"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);

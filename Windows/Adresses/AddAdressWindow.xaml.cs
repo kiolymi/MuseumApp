@@ -1,21 +1,74 @@
 using System.Windows;
-using MuseumApp.Data; using MuseumApp.Data.Entities; using MuseumApp.Helpers;
+using MuseumApp.Data;
+using MuseumApp.Data.Entities;
+using MuseumApp.Helpers;
+
 namespace MuseumApp.Windows.Adresses;
-public partial class AddAdressWindow : Window {
-  public AddAdressWindow() => InitializeComponent();
-  private void btnAdd_Click(object sender, RoutedEventArgs e) {
-    try {
-      var err = ValidationHelper.First(
-        ValidationHelper.NotEmpty(txtCity.Text, "Город"), ValidationHelper.MaxLen(txtCity.Text, 45, "Город"),
-        ValidationHelper.NotEmpty(txtStreet.Text, "Улица"), ValidationHelper.MaxLen(txtStreet.Text, 45, "Улица"),
-        ValidationHelper.NotEmpty(txtHouse.Text, "Дом"), ValidationHelper.MaxLen(txtHouse.Text, 45, "Дом"));
-      if (err != null) { MessageBox.Show(err); return; }
-      using var ctx = new MuseumDbContext();
-      ctx.Adresses.Add(new Adress {
-        City = txtCity.Text.Trim(), Street = txtStreet.Text.Trim(), House = txtHouse.Text.Trim(),
-        PostalCode = string.IsNullOrWhiteSpace(txtPostal.Text) ? null : txtPostal.Text.Trim()
-      });
-      ctx.SaveChanges(); DialogResult = true; Close();
-    } catch (Exception ex) { DbErrorHelper.Show(ex); }
-  }
+
+public partial class AddAdressWindow : Window
+{
+    public AddAdressWindow()
+    {
+        InitializeComponent();
+    }
+
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtCity.Text, 45, "Город");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.SafeText(txtStreet.Text, 45, "Улица");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.SafeText(txtHouse.Text, 45, "Дом");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.OptionalSafeText(txtPostal.Text, 45, "Индекс");
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
+    private void btnAdd_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var error = ValidateForm();
+            if (error != null)
+            {
+                MessageBox.Show(error);
+                return;
+            }
+
+            using var context = new MuseumDbContext();
+            context.Adresses.Add(new Adress
+            {
+                City = txtCity.Text.Trim(),
+                Street = txtStreet.Text.Trim(),
+                House = txtHouse.Text.Trim(),
+                PostalCode = TextHelper.TrimOrNull(txtPostal.Text)
+            });
+            context.SaveChanges();
+            DialogResult = true;
+            Close();
+        }
+        catch (Exception ex)
+        {
+            DbErrorHelper.Show(ex);
+        }
+    }
 }

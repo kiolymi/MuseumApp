@@ -9,4 +9,6 @@ public sealed class CrudFieldSpec
     public bool IsKey { get; init; }
     public bool ReadOnlyOnEdit { get; init; }
     public bool IsNullable { get; init; }
+    public StringValidationKind StringValidation { get; init; } = StringValidationKind.None;
+    public int MaxLength { get; init; } = 255;
 }

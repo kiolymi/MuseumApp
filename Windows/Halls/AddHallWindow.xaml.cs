@@ -11,25 +11,53 @@ public partial class AddHallWindow : Window
     {
         InitializeComponent();
         if (!ComboLoadHelper.TryLoadBranchesForAdd(cmbBranch))
+        {
             Close();
+        }
+    }
+
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал");
+        if (error != null)
+        {
+            return error;
+        }
+
+        var capacity = InputHelper.ParseNullableInt(txtCapacity.Text);
+        if (capacity.HasValue)
+        {
+            error = ValidationHelper.Positive(capacity.Value, "Вместимость");
+            if (error != null)
+            {
+                return error;
+            }
+        }
+
+        return null;
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var capacity = InputHelper.ParseNullableInt(txtCapacity.Text);
-            var area = InputHelper.ParseNullableDouble(txtArea.Text);
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал"),
-                capacity.HasValue ? ValidationHelper.Positive(capacity.Value, "Вместимость") : null);
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
                 return;
             }
+
+            var capacity = InputHelper.ParseNullableInt(txtCapacity.Text);
+            var area = InputHelper.ParseNullableDouble(txtArea.Text);
 
             var context = new MuseumDbContext();
             var hall = new Hall

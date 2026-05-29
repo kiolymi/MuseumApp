@@ -23,24 +23,45 @@ public partial class EditExcursionTicketWindow : Window
         txtActualCost.Text = selected.ActualCost?.ToString() ?? "0";
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.VisitDate(dpVisitDate.SelectedDate);
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var cost = InputHelper.ParseDecimal(txtActualCost.Text);
-            var error = ValidationHelper.First(
-                ValidationHelper.VisitDate(dpVisitDate.SelectedDate),
-                ValidationHelper.NonNegative(cost, "Стоимость"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
                 return;
             }
 
+            var cost = InputHelper.ParseDecimal(txtActualCost.Text);
+            var costError = ValidationHelper.NonNegative(cost, "Стоимость");
+            if (costError != null)
+            {
+                MessageBox.Show(costError);
+                return;
+            }
+
             var visitTime = TimeOnly.Parse(txtVisitTime.Text.Trim(), CultureInfo.InvariantCulture);
             var context = new MuseumDbContext();
             var item = context.ExcursionTickets.Find(_idVisitor, _idExcursion);
-            if (item == null) return;
+            if (item == null)
+            {
+                return;
+            }
 
             item.VisitDate = DateOnly.FromDateTime(dpVisitDate.SelectedDate ?? DateTime.Today);
             item.VisitTime = visitTime;

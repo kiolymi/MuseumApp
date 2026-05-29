@@ -9,19 +9,35 @@ public static class SessionUser
     public static string Role { get; set; } = "";
     public static string Password { get; set; } = "";
 
-    public static string RoleDisplayName => Role switch
+    public static string RoleDisplayName
     {
-        "admin_museum" => "Администратор",
-        "curator_museum" => "Куратор",
-        "cashier_museum" => "Кассир",
-        _ => "Пользователь"
-    };
+        get
+        {
+            switch (Role)
+            {
+                case "admin_museum":
+                    return "Администратор";
+                case "curator_museum":
+                    return "Куратор";
+                case "cashier_museum":
+                    return "Кассир";
+                default:
+                    return "Пользователь";
+            }
+        }
+    }
 
-    public static string HeaderText => $"{RoleDisplayName}, {Login}";
+    public static string HeaderText
+    {
+        get
+        {
+            return RoleDisplayName + ", " + Login;
+        }
+    }
 
     public static string GetConnectionString()
     {
-        return $"Host=localhost;Port=5433;Database=museum;Username={Login};Password={Password}";
+        return "Host=localhost;Port=5433;Database=museum;Username=" + Login + ";Password=" + Password;
     }
 
     /// <summary>
@@ -31,8 +47,11 @@ public static class SessionUser
     {
         using var context = new MuseumDbContext();
         var connection = context.Database.GetDbConnection();
+
         if (connection.State != System.Data.ConnectionState.Open)
+        {
             connection.Open();
+        }
 
         using var command = connection.CreateCommand();
         command.CommandText = """
@@ -51,6 +70,13 @@ public static class SessionUser
             LIMIT 1
             """;
 
-        return command.ExecuteScalar()?.ToString() ?? "";
+        var result = command.ExecuteScalar();
+
+        if (result == null)
+        {
+            return "";
+        }
+
+        return result.ToString() ?? "";
     }
 }

@@ -24,30 +24,71 @@ public partial class EditEventWindow : Window
         ComboLoadHelper.LoadEmployees(cmbEmployee, selected.IdEmployee);
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbEmployee.SelectedValue, "Сотрудник");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.VisitDate(dpEventDate.SelectedDate);
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var duration = InputHelper.ParseInt(txtDuration.Text);
-            var price = InputHelper.ParseDecimal(txtPrice.Text);
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.Combo(cmbBranch.SelectedValue, "Филиал"),
-                ValidationHelper.Combo(cmbEmployee.SelectedValue, "Сотрудник"),
-                ValidationHelper.VisitDate(dpEventDate.SelectedDate),
-                ValidationHelper.Positive(duration, "Длительность"),
-                ValidationHelper.NonNegative(price, "Цена"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
                 return;
             }
 
+            var duration = InputHelper.ParseInt(txtDuration.Text);
+            var durationError = ValidationHelper.Positive(duration, "Длительность");
+            if (durationError != null)
+            {
+                MessageBox.Show(durationError);
+                return;
+            }
+
+            var price = InputHelper.ParseDecimal(txtPrice.Text);
+            var priceError = ValidationHelper.NonNegative(price, "Цена");
+            if (priceError != null)
+            {
+                MessageBox.Show(priceError);
+                return;
+            }
+
             var startTime = TimeOnly.Parse(txtStartTime.Text.Trim(), CultureInfo.InvariantCulture);
             var context = new MuseumDbContext();
             var item = context.Events.Find(_id);
-            if (item == null) return;
+            if (item == null)
+            {
+                return;
+            }
 
             item.EventName = txtName.Text.Trim();
             item.IdBranch = (int)cmbBranch.SelectedValue!;

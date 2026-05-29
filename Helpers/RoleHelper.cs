@@ -9,25 +9,43 @@ public static class RoleHelper
         "pavlov", "cashier_museum"
     };
 
-    public static bool IsKnownLogin(string login) =>
-        KnownLogins.Contains(login.Trim());
+    public static bool IsKnownLogin(string login)
+    {
+        return KnownLogins.Contains(login.Trim());
+    }
 
     public static string ResolveRole(string login)
     {
-        return login.Trim().ToLowerInvariant() switch
+        var normalized = login.Trim().ToLowerInvariant();
+
+        switch (normalized)
         {
-            "ivanov" or "admin_museum" => "admin_museum",
-            "petrova" or "curator_museum" => "curator_museum",
-            "pavlov" or "cashier_museum" => "cashier_museum",
-            _ => login.Trim().ToLowerInvariant()
-        };
+            case "ivanov":
+            case "admin_museum":
+                return "admin_museum";
+            case "petrova":
+            case "curator_museum":
+                return "curator_museum";
+            case "pavlov":
+            case "cashier_museum":
+                return "cashier_museum";
+            default:
+                return normalized;
+        }
     }
 
-    public static string GetDisplayName(string role) => role switch
+    public static string GetDisplayName(string role)
     {
-        "admin_museum" => "Администратор",
-        "curator_museum" => "Куратор",
-        "cashier_museum" => "Кассир",
-        _ => role
-    };
+        switch (role)
+        {
+            case "admin_museum":
+                return "Администратор";
+            case "curator_museum":
+                return "Куратор";
+            case "cashier_museum":
+                return "Кассир";
+            default:
+                return role;
+        }
+    }
 }

@@ -13,14 +13,40 @@ public partial class LoginWindow : Window
         Icon = new BitmapImage(new Uri("pack://application:,,,/Assets/logo.png", UriKind.Absolute));
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtLogin.Text, 63, "Логин");
+        if (error != null)
+        {
+            return error;
+        }
+
+        if (string.IsNullOrWhiteSpace(txtPassword.Password))
+        {
+            return "Введите пароль.";
+        }
+
+        error = ValidationHelper.NoForbiddenChars(txtPassword.Password, "Пароль");
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnLogin_Click(object sender, RoutedEventArgs e)
     {
-        var login = txtLogin.Text.Trim();
-        if (string.IsNullOrEmpty(login))
+        var error = ValidateForm();
+        if (error != null)
         {
-            MessageBox.Show("Введите логин.");
+            MessageBox.Show(error);
             return;
         }
+
+        var login = txtLogin.Text.Trim();
 
         if (!RoleHelper.IsKnownLogin(login))
         {
@@ -35,12 +61,6 @@ public partial class LoginWindow : Window
             SessionUser.Password = txtPassword.Password;
             SessionUser.Role = RoleHelper.ResolveRole(login);
 
-            if (string.IsNullOrWhiteSpace(SessionUser.Login))
-            {
-                MessageBox.Show("Введите логин.");
-                return;
-            }
-
             using (var context = new MuseumDbContext())
             {
                 if (!context.Database.CanConnect())
@@ -51,6 +71,7 @@ public partial class LoginWindow : Window
             }
 
             SessionUser.Role = SessionUser.ResolveRoleFromDatabase();
+
             if (string.IsNullOrEmpty(SessionUser.Role))
             {
                 MessageBox.Show("У пользователя нет роли admin_museum, curator_museum или cashier_museum.");

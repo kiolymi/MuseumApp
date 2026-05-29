@@ -20,17 +20,42 @@ public partial class EditAuthorWindow : Window
         ComboLoadHelper.LoadCountries(cmbCountry, selected.IdCountry);
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtLastName.Text, 45, "Фамилия");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.SafeText(txtFirstName.Text, 45, "Имя");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.OptionalSafeText(txtMiddleName.Text, 45, "Отчество");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbCountry.SelectedValue, "Страна");
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtLastName.Text, "Фамилия"),
-                ValidationHelper.NotEmpty(txtFirstName.Text, "Имя"),
-                ValidationHelper.MaxLen(txtLastName.Text, 45, "Фамилия"),
-                ValidationHelper.MaxLen(txtFirstName.Text, 45, "Имя"),
-                ValidationHelper.MaxLen(txtMiddleName.Text, 45, "Отчество"),
-                ValidationHelper.Combo(cmbCountry.SelectedValue, "Страна"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
@@ -39,11 +64,14 @@ public partial class EditAuthorWindow : Window
 
             var context = new MuseumDbContext();
             var item = context.Authors.Find(_id);
-            if (item == null) return;
+            if (item == null)
+            {
+                return;
+            }
 
             item.LastName = txtLastName.Text.Trim();
             item.FirstName = txtFirstName.Text.Trim();
-            item.MiddleName = string.IsNullOrWhiteSpace(txtMiddleName.Text) ? null : txtMiddleName.Text.Trim();
+            item.MiddleName = TextHelper.TrimOrNull(txtMiddleName.Text);
             item.IdCountry = (int)cmbCountry.SelectedValue!;
 
             context.SaveChanges();

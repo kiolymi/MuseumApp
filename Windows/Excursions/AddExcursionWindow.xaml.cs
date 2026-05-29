@@ -17,7 +17,10 @@ public partial class AddExcursionWindow : Window
             cmbExhibition.ItemsSource = context.Exhibitions
                 .Select(e => new { Id = e.IdExhibition, Name = e.ExhibitionName })
                 .ToList();
-            if (cmbExhibition.Items.Count > 0) cmbExhibition.SelectedIndex = 0;
+            if (cmbExhibition.Items.Count > 0)
+            {
+                cmbExhibition.SelectedIndex = 0;
+            }
         }
         catch (Exception ex)
         {
@@ -33,24 +36,60 @@ public partial class AddExcursionWindow : Window
         }
 
         if (!ComboLoadHelper.TryLoadVisitorsForAdd(cmbCustomer))
+        {
             Close();
+        }
+    }
+
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.Combo(cmbExhibition.SelectedValue, "Выставка");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbGuide.SelectedValue, "Гид");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbCustomer.SelectedValue, "Заказчик");
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var duration = InputHelper.ParseInt(txtDuration.Text);
-            var price = InputHelper.ParseDecimal(txtPrice.Text);
-            var error = ValidationHelper.First(
-                ValidationHelper.Combo(cmbExhibition.SelectedValue, "Выставка"),
-                ValidationHelper.Combo(cmbGuide.SelectedValue, "Гид"),
-                ValidationHelper.Combo(cmbCustomer.SelectedValue, "Заказчик"),
-                ValidationHelper.Positive(duration, "Длительность"),
-                ValidationHelper.NonNegative(price, "Цена"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
+                return;
+            }
+
+            var duration = InputHelper.ParseInt(txtDuration.Text);
+            var durationError = ValidationHelper.Positive(duration, "Длительность");
+            if (durationError != null)
+            {
+                MessageBox.Show(durationError);
+                return;
+            }
+
+            var price = InputHelper.ParseDecimal(txtPrice.Text);
+            var priceError = ValidationHelper.NonNegative(price, "Цена");
+            if (priceError != null)
+            {
+                MessageBox.Show(priceError);
                 return;
             }
 

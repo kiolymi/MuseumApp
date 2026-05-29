@@ -14,20 +14,20 @@ public static class CrudRegistry
     private static IEnumerable<CrudTableSpec> Build()
     {
         yield return Spec(TableId.Adresses, typeof(Adress), ["IdAddress"], "City",
-            F("City", "Город", CrudFieldKind.String),
-            F("Street", "Улица", CrudFieldKind.String),
-            F("House", "Дом", CrudFieldKind.String),
-            F("PostalCode", "Индекс", CrudFieldKind.NullableString));
+            F("City", "Город", CrudFieldKind.String, StringValidationKind.SafeText, 45),
+            F("Street", "Улица", CrudFieldKind.String, StringValidationKind.SafeText, 45),
+            F("House", "Дом", CrudFieldKind.String, StringValidationKind.SafeText, 45),
+            F("PostalCode", "Индекс", CrudFieldKind.NullableString, StringValidationKind.OptionalSafeText, 20));
 
         yield return Spec(TableId.Countries, typeof(Country), ["IdCountry"], "CountryName",
             F("CountryName", "Страна", CrudFieldKind.String));
 
         yield return Spec(TableId.Companies, typeof(Company), ["IdCompany"], "CompanyName",
-            F("CompanyName", "Компания", CrudFieldKind.String),
-            F("Inn", "ИНН", CrudFieldKind.NullableString),
-            F("LegalAddress", "Юр. адрес", CrudFieldKind.NullableString),
-            F("ContactPhone", "Телефон", CrudFieldKind.NullableString),
-            F("ContactEmail", "Email", CrudFieldKind.NullableString));
+            F("CompanyName", "Компания", CrudFieldKind.String, StringValidationKind.SafeText, 255),
+            F("Inn", "ИНН", CrudFieldKind.NullableString, StringValidationKind.Inn, 12),
+            F("LegalAddress", "Юр. адрес", CrudFieldKind.NullableString, StringValidationKind.OptionalSafeText, 255),
+            F("ContactPhone", "Телефон", CrudFieldKind.NullableString, StringValidationKind.Phone, 45),
+            F("ContactEmail", "Email", CrudFieldKind.NullableString, StringValidationKind.Email, 100));
 
         yield return Spec(TableId.Positions, typeof(Position), ["IdPosition"], "PositionName",
             F("PositionName", "Должность", CrudFieldKind.String),
@@ -54,7 +54,7 @@ public static class CrudRegistry
             F("BranchName", "Филиал", CrudFieldKind.String),
             Fk("IdMuseum", "Музей", FkReference.Museum),
             Fk("IdAddress", "Адрес", FkReference.Address),
-            F("Phone", "Телефон", CrudFieldKind.NullableString),
+            F("Phone", "Телефон", CrudFieldKind.NullableString, StringValidationKind.Phone, 45),
             Fk("IdResponsible", "Ответственный", FkReference.Employee));
 
         yield return Spec(TableId.Storages, typeof(Storage), ["IdStorage"], "StorageName",
@@ -66,9 +66,9 @@ public static class CrudRegistry
         yield return Spec(TableId.Shops, typeof(Shop), ["IdShop"], "ShopName",
             F("ShopName", "Магазин", CrudFieldKind.String),
             Fk("IdBranch", "Филиал", FkReference.Branch),
-            F("Phone", "Телефон", CrudFieldKind.NullableString),
-            F("Email", "Email", CrudFieldKind.NullableString),
-            F("WorkingHours", "Часы работы", CrudFieldKind.NullableString));
+            F("Phone", "Телефон", CrudFieldKind.NullableString, StringValidationKind.Phone, 45),
+            F("Email", "Email", CrudFieldKind.NullableString, StringValidationKind.Email, 100),
+            F("WorkingHours", "Часы работы", CrudFieldKind.NullableString, StringValidationKind.OptionalSafeText, 100));
 
         yield return Spec(TableId.Products, typeof(Product), ["IdProduct"], "ProductName",
             F("ProductName", "Товар", CrudFieldKind.String),
@@ -121,11 +121,14 @@ public static class CrudRegistry
         Fields = fields
     };
 
-    private static CrudFieldSpec F(string prop, string label, CrudFieldKind kind) => new()
+    private static CrudFieldSpec F(string prop, string label, CrudFieldKind kind,
+        StringValidationKind stringValidation = StringValidationKind.None, int maxLength = 255) => new()
     {
         PropertyName = prop,
         Label = label,
-        Kind = kind
+        Kind = kind,
+        StringValidation = stringValidation,
+        MaxLength = maxLength
     };
 
     private static CrudFieldSpec Fk(string prop, string label, FkReference fk, bool nullable = false) => new()

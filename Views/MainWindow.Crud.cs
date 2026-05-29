@@ -10,24 +10,34 @@ public partial class MainWindow
 {
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
-        if (_currentTableId is not { } id)
+        if (_currentTableId == null)
+        {
             return;
+        }
 
-        if (TableCrudService.TryAdd(id, this))
+        var tableId = _currentTableId.Value;
+
+        if (TableCrudService.TryAdd(tableId, this))
         {
             Load();
             MessageBox.Show("Запись добавлена");
             return;
         }
 
-        if (CrudRegistry.IsGeneric(id))
+        if (CrudRegistry.IsGeneric(tableId))
+        {
             GenericAdd();
+        }
     }
 
     private void btnEdit_Click(object sender, RoutedEventArgs e)
     {
-        if (_currentTableId is not { } id)
+        if (_currentTableId == null)
+        {
             return;
+        }
+
+        var tableId = _currentTableId.Value;
 
         if (dgMain.SelectedItem == null)
         {
@@ -35,21 +45,27 @@ public partial class MainWindow
             return;
         }
 
-        if (TableCrudService.TryEdit(id, dgMain.SelectedItem, this))
+        if (TableCrudService.TryEdit(tableId, dgMain.SelectedItem, this))
         {
             Load();
             MessageBox.Show("Запись изменена");
             return;
         }
 
-        if (CrudRegistry.IsGeneric(id))
+        if (CrudRegistry.IsGeneric(tableId))
+        {
             GenericEdit();
+        }
     }
 
     private void btnDelete_Click(object sender, RoutedEventArgs e)
     {
-        if (_currentTableId is not { } id)
+        if (_currentTableId == null)
+        {
             return;
+        }
+
+        var tableId = _currentTableId.Value;
 
         if (dgMain.SelectedItem == null)
         {
@@ -64,19 +80,23 @@ public partial class MainWindow
             MessageBoxImage.Question);
 
         if (result != MessageBoxResult.Yes)
+        {
             return;
+        }
 
         try
         {
-            if (TableDeleteService.Delete(id, dgMain.SelectedItem))
+            if (TableDeleteService.Delete(tableId, dgMain.SelectedItem))
             {
                 Load();
                 MessageBox.Show("Удалено");
                 return;
             }
 
-            if (CrudRegistry.IsGeneric(id))
+            if (CrudRegistry.IsGeneric(tableId))
+            {
                 GenericDelete();
+            }
         }
         catch (Exception ex)
         {

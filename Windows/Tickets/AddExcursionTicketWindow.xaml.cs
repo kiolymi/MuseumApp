@@ -23,8 +23,14 @@ public partial class AddExcursionTicketWindow : Window
                 .Select(e => new { Id = e.IdExcursion, Name = $"Экскурсия #{e.IdExcursion}" })
                 .ToList();
 
-            if (cmbVisitor.Items.Count > 0) cmbVisitor.SelectedIndex = 0;
-            if (cmbExcursion.Items.Count > 0) cmbExcursion.SelectedIndex = 0;
+            if (cmbVisitor.Items.Count > 0)
+            {
+                cmbVisitor.SelectedIndex = 0;
+            }
+            if (cmbExcursion.Items.Count > 0)
+            {
+                cmbExcursion.SelectedIndex = 0;
+            }
         }
         catch (Exception ex)
         {
@@ -33,14 +39,36 @@ public partial class AddExcursionTicketWindow : Window
         }
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.Combo(cmbVisitor.SelectedValue, "Посетитель");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbExcursion.SelectedValue, "Экскурсия");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.VisitDate(dpVisitDate.SelectedDate);
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var error = ValidationHelper.First(
-                ValidationHelper.Combo(cmbVisitor.SelectedValue, "Посетитель"),
-                ValidationHelper.Combo(cmbExcursion.SelectedValue, "Экскурсия"),
-                ValidationHelper.VisitDate(dpVisitDate.SelectedDate));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);

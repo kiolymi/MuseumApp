@@ -11,18 +11,41 @@ public partial class AddCollectionWindow : Window
     {
         InitializeComponent();
         if (!ComboLoadHelper.TryLoadEmployeesForAdd(cmbKeeper))
+        {
             Close();
+        }
+    }
+
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbKeeper.SelectedValue, "Хранитель");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.OptionalSafeText(txtDescription.Text, 255, "Описание");
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.Combo(cmbKeeper.SelectedValue, "Хранитель"),
-                ValidationHelper.MaxLen(txtDescription.Text, 255, "Описание"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
@@ -33,7 +56,7 @@ public partial class AddCollectionWindow : Window
             var collection = new Collection
             {
                 CollectionName = txtName.Text.Trim(),
-                Description = txtDescription.Text.Trim(),
+                Description = TextHelper.TrimOrEmpty(txtDescription.Text),
                 IdKeeper = (int)cmbKeeper.SelectedValue!
             };
             context.Collections.Add(collection);

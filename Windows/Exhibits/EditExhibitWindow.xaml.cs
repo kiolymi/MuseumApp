@@ -15,7 +15,9 @@ public partial class EditExhibitWindow : Window
         _id = selected.IdExhibit;
         txtName.Text = selected.Name;
         if (selected.CreationDate.HasValue)
+        {
             dpCreationDate.SelectedDate = selected.CreationDate.Value.ToDateTime(TimeOnly.MinValue);
+        }
 
         try
         {
@@ -43,15 +45,36 @@ public partial class EditExhibitWindow : Window
         }
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbCollection.SelectedValue, "Коллекция");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbCondition.SelectedValue, "Состояние");
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.Combo(cmbCollection.SelectedValue, "Коллекция"),
-                ValidationHelper.Combo(cmbCondition.SelectedValue, "Состояние"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
@@ -60,7 +83,10 @@ public partial class EditExhibitWindow : Window
 
             var context = new MuseumDbContext();
             var item = context.Exhibits.Find(_id);
-            if (item == null) return;
+            if (item == null)
+            {
+                return;
+            }
 
             item.Name = txtName.Text.Trim();
             item.IdCollection = (int)cmbCollection.SelectedValue!;

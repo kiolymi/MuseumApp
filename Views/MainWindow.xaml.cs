@@ -18,33 +18,45 @@ public partial class MainWindow : Window
 
         txtUser.Text = SessionUser.Login;
         txtRole.Text = RoleHelper.GetDisplayName(SessionUser.Role);
-        Title = $"ИС Музейный комплекс — {txtUser.Text} ({txtRole.Text})";
+        Title = "ИС Музейный комплекс — " + txtUser.Text + " (" + txtRole.Text + ")";
 
         dgMain.AutoGeneratingColumn += DataGrid_AutoGeneratingColumn;
 
         foreach (var item in TableCatalog.GetTreeItems(SessionUser.Role))
+        {
             treeTables.Items.Add(item);
+        }
 
-        treeTables.Loaded += (_, _) => SelectFirstTreeItem();
+        treeTables.Loaded += TreeTables_OnLoaded;
+    }
+
+    private void TreeTables_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        SelectFirstTreeItem();
     }
 
     private void SelectFirstTreeItem()
     {
         if (treeTables.Items.Count == 0)
+        {
             return;
+        }
 
         treeTables.UpdateLayout();
-        if (treeTables.ItemContainerGenerator.ContainerFromIndex(0) is TreeViewItem tvi)
+
+        if (treeTables.ItemContainerGenerator.ContainerFromIndex(0) is TreeViewItem firstItem)
         {
-            tvi.IsSelected = true;
-            tvi.BringIntoView();
+            firstItem.IsSelected = true;
+            firstItem.BringIntoView();
         }
     }
 
     private void treeTables_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (e.NewValue is TableTreeItem item)
+        {
             ShowTable(item);
+        }
     }
 
     private void ShowTable(TableTreeItem item)
@@ -57,11 +69,23 @@ public partial class MainWindow : Window
 
     private void UpdateCrudButtons()
     {
-        var canWrite = _currentAccess == TableAccessLevel.Full
-                       && _currentTableId.HasValue
-                       && TableCatalog.SupportsCrud(_currentTableId.Value);
+        var canWrite = false;
 
-        var visibility = canWrite ? Visibility.Visible : Visibility.Collapsed;
+        if (_currentAccess == TableAccessLevel.Full && _currentTableId.HasValue)
+        {
+            canWrite = TableCatalog.SupportsCrud(_currentTableId.Value);
+        }
+
+        Visibility visibility;
+        if (canWrite)
+        {
+            visibility = Visibility.Visible;
+        }
+        else
+        {
+            visibility = Visibility.Collapsed;
+        }
+
         btnAdd.Visibility = visibility;
         btnEdit.Visibility = visibility;
         btnDelete.Visibility = visibility;
@@ -69,8 +93,12 @@ public partial class MainWindow : Window
 
     public void LoadCurrentTable()
     {
-        if (_currentTableId is not { } tableId)
+        if (!_currentTableId.HasValue)
+        {
             return;
+        }
+
+        var tableId = _currentTableId.Value;
 
         try
         {
@@ -82,7 +110,10 @@ public partial class MainWindow : Window
         }
     }
 
-    public void Load() => LoadCurrentTable();
+    public void Load()
+    {
+        LoadCurrentTable();
+    }
 
     private void btnLogout_Click(object sender, RoutedEventArgs e)
     {
@@ -98,12 +129,33 @@ public partial class MainWindow : Window
     private static void DataGrid_AutoGeneratingColumn(object? sender, DataGridAutoGeneratingColumnEventArgs e)
     {
         var type = Nullable.GetUnderlyingType(e.PropertyType) ?? e.PropertyType;
-        if (type == typeof(string)
-            || type.IsPrimitive
-            || type == typeof(decimal)
-            || type == typeof(DateTime)
-            || type == typeof(DateOnly)
-            || type == typeof(TimeOnly))
+
+        if (type == typeof(string))
+        {
+            return;
+        }
+
+        if (type.IsPrimitive)
+        {
+            return;
+        }
+
+        if (type == typeof(decimal))
+        {
+            return;
+        }
+
+        if (type == typeof(DateTime))
+        {
+            return;
+        }
+
+        if (type == typeof(DateOnly))
+        {
+            return;
+        }
+
+        if (type == typeof(TimeOnly))
         {
             return;
         }

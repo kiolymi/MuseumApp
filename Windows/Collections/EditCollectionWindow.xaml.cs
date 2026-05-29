@@ -19,15 +19,36 @@ public partial class EditCollectionWindow : Window
         ComboLoadHelper.LoadEmployees(cmbKeeper, selected.IdKeeper);
     }
 
+    private string? ValidateForm()
+    {
+        string? error;
+
+        error = ValidationHelper.SafeText(txtName.Text, 255, "Название");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.Combo(cmbKeeper.SelectedValue, "Хранитель");
+        if (error != null)
+        {
+            return error;
+        }
+
+        error = ValidationHelper.OptionalSafeText(txtDescription.Text, 255, "Описание");
+        if (error != null)
+        {
+            return error;
+        }
+
+        return null;
+    }
+
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var error = ValidationHelper.First(
-                ValidationHelper.NotEmpty(txtName.Text, "Название"),
-                ValidationHelper.MaxLen(txtName.Text, 255, "Название"),
-                ValidationHelper.Combo(cmbKeeper.SelectedValue, "Хранитель"),
-                ValidationHelper.MaxLen(txtDescription.Text, 255, "Описание"));
+            var error = ValidateForm();
             if (error != null)
             {
                 MessageBox.Show(error);
@@ -36,10 +57,13 @@ public partial class EditCollectionWindow : Window
 
             var context = new MuseumDbContext();
             var item = context.Collections.Find(_id);
-            if (item == null) return;
+            if (item == null)
+            {
+                return;
+            }
 
             item.CollectionName = txtName.Text.Trim();
-            item.Description = txtDescription.Text.Trim();
+            item.Description = TextHelper.TrimOrEmpty(txtDescription.Text);
             item.IdKeeper = (int)cmbKeeper.SelectedValue!;
 
             context.SaveChanges();
