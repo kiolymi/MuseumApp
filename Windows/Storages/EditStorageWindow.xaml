@@ -1,9 +1,9 @@
-<Window x:Class="MuseumApp.Windows.Storages.EditStorageWindow"
+﻿<Window x:Class="MuseumApp.Windows.Storages.EditStorageWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  Title="Изменить хранилище" Height="260" Width="460" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Style="{StaticResource DialogWindow}">
+  Title="Изменить хранилище" Height="260" Width="460" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#F2F6FA" FontFamily="Segoe UI" FontSize="14" Foreground="#1E2D3D">
 <Grid Margin="16"><Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
-<Label Content="Название:"/><TextBox x:Name="txtName" Grid.Row="1" Margin="0,0,0,8"/>
-<Label Grid.Row="2" Content="Филиал:"/><ComboBox x:Name="cmbBranch" Grid.Row="2" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
-<Label Grid.Row="3" Content="Температура:"/><TextBox x:Name="txtTemp" Grid.Row="3" Margin="0,0,0,8"/>
-<Label Grid.Row="4" Content="Влажность:"/><TextBox x:Name="txtHumidity" Grid.Row="4" Margin="0,0,0,8"/>
-<Button Grid.Row="5" Content="Сохранить" Height="32" Click="btnSave_Click"/></Grid></Window>
+<Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Content="Название:"/><TextBox Height="34" Padding="10,6" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="txtName" Grid.Row="1" Margin="0,0,0,8"/>
+<Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="2" Content="Филиал:"/><ComboBox Height="36" Padding="8,4" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="cmbBranch" Grid.Row="2" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
+<Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="3" Content="Температура:"/><TextBox Height="34" Padding="10,6" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="txtTemp" Grid.Row="3" Margin="0,0,0,8"/>
+<Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="4" Content="Влажность:"/><TextBox Height="34" Padding="10,6" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="txtHumidity" Grid.Row="4" Margin="0,0,0,8"/>
+<Button Grid.Row="5" Content="Сохранить" Height="36" MinWidth="100" Padding="18,0" Background="#1A3D5C" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand" Click="btnSave_Click"/></Grid></Window>

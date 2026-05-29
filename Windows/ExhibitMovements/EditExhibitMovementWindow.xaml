@@ -1,12 +1,12 @@
-<Window x:Class="MuseumApp.Windows.ExhibitMovements.EditExhibitMovementWindow"
+﻿<Window x:Class="MuseumApp.Windows.ExhibitMovements.EditExhibitMovementWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  Title="Изменить перемещение" Height="340" Width="480" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Style="{StaticResource DialogWindow}">
+  Title="Изменить перемещение" Height="340" Width="480" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#F2F6FA" FontFamily="Segoe UI" FontSize="14" Foreground="#1E2D3D">
 <Grid Margin="16"><Grid.RowDefinitions>
 <RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
-<Label Content="Экспонат:"/><ComboBox x:Name="cmbExhibit" Grid.Row="1" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
-<Label Grid.Row="2" Content="Ответственный:"/><ComboBox x:Name="cmbResponsible" Grid.Row="2" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
-<Label Grid.Row="3" Content="Из хранилища:"/><ComboBox x:Name="cmbFrom" Grid.Row="3" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
-<Label Grid.Row="4" Content="В хранилище:"/><ComboBox x:Name="cmbTo" Grid.Row="4" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
-<Label Grid.Row="5" Content="Дата:"/><DatePicker x:Name="dpDate" Grid.Row="5" Margin="0,0,0,8"/>
-<Label Grid.Row="6" Content="Причина:"/><ComboBox x:Name="cmbReason" Grid.Row="6" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
-<Button Grid.Row="7" Content="Сохранить" Height="32" Click="btnSave_Click"/></Grid></Window>
+<Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Content="Экспонат:"/><ComboBox Height="36" Padding="8,4" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="cmbExhibit" Grid.Row="1" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
+<Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="2" Content="Ответственный:"/><ComboBox Height="36" Padding="8,4" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="cmbResponsible" Grid.Row="2" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
+<Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="3" Content="Из хранилища:"/><ComboBox Height="36" Padding="8,4" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="cmbFrom" Grid.Row="3" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
+<Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="4" Content="В хранилище:"/><ComboBox Height="36" Padding="8,4" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="cmbTo" Grid.Row="4" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
+<Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="5" Content="Дата:"/><DatePicker Height="36" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="dpDate" Grid.Row="5" Margin="0,0,0,8"/>
+<Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="6" Content="Причина:"/><ComboBox Height="36" Padding="8,4" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="cmbReason" Grid.Row="6" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,8"/>
+<Button Grid.Row="7" Content="Сохранить" Height="36" MinWidth="100" Padding="18,0" Background="#1A3D5C" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand" Click="btnSave_Click"/></Grid></Window>

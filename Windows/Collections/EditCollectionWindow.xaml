@@ -1,8 +1,8 @@
-<Window x:Class="MuseumApp.Windows.Collections.EditCollectionWindow"
+﻿<Window x:Class="MuseumApp.Windows.Collections.EditCollectionWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Изменить коллекцию" Height="320" Width="480"
-        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Style="{StaticResource DialogWindow}">
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#F2F6FA" FontFamily="Segoe UI" FontSize="14" Foreground="#1E2D3D">
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,17 +16,16 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" Content="Название:"/>
-        <TextBox x:Name="txtName" Grid.Row="0" Grid.Column="1" Margin="0,0,0,8"/>
+        <Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="0" Grid.Column="0" Content="Название:"/>
+        <TextBox Height="34" Padding="10,6" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="txtName" Grid.Row="0" Grid.Column="1" Margin="0,0,0,8"/>
 
-        <Label Grid.Row="1" Grid.Column="0" Content="Описание:"/>
-        <TextBox x:Name="txtDescription" Grid.Row="1" Grid.Column="1" Margin="0,0,0,8"/>
+        <Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="1" Grid.Column="0" Content="Описание:"/>
+        <TextBox Height="34" Padding="10,6" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="txtDescription" Grid.Row="1" Grid.Column="1" Margin="0,0,0,8"/>
 
-        <Label Grid.Row="2" Grid.Column="0" Content="Хранитель:"/>
-        <ComboBox x:Name="cmbKeeper" Grid.Row="2" Grid.Column="1" Margin="0,0,0,8"
+        <Label FontWeight="SemiBold" Foreground="#1E2D3D" VerticalAlignment="Center"  Grid.Row="2" Grid.Column="0" Content="Хранитель:"/>
+        <ComboBox Height="36" Padding="8,4" Background="#FFFFFF" BorderBrush="#C8D8E8" BorderThickness="1" Foreground="#1E2D3D"  x:Name="cmbKeeper" Grid.Row="2" Grid.Column="1" Margin="0,0,0,8"
                   DisplayMemberPath="Name" SelectedValuePath="Id"/>
 
-        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="Сохранить"
-                Height="32" Click="btnSave_Click"/>
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="Сохранить" Height="36" MinWidth="100" Padding="18,0" Background="#1A3D5C" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand" Click="btnSave_Click"/>
     </Grid>
 </Window>
