@@ -39,7 +39,7 @@ public static class TableDeleteService
             case TableId.Employees:
                 context.Employees.Remove((Employee)selected);
                 break;
-            case TableId.Museum:
+            case TableId.Museums:
                 context.Museums.Remove((Museum)selected);
                 break;
             case TableId.Branches:
@@ -108,7 +108,7 @@ public static class TableDeleteService
             case TableId.Products:
                 context.Products.Remove((Product)selected);
                 break;
-            case TableId.Inventory:
+            case TableId.Inventories:
                 context.Inventories.Remove((Inventory)selected);
                 break;
             default:

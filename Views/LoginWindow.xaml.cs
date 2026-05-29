@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Media.Imaging;
 using MuseumApp.Data;
 using MuseumApp.Helpers;
 
@@ -9,6 +10,7 @@ public partial class LoginWindow : Window
     public LoginWindow()
     {
         InitializeComponent();
+        Icon = new BitmapImage(new Uri("pack://application:,,,/Assets/logo.png", UriKind.Absolute));
     }
 
     private void btnLogin_Click(object sender, RoutedEventArgs e)

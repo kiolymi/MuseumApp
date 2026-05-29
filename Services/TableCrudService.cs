@@ -56,7 +56,7 @@ public static class TableCrudService
             TableId.ExhibitConditions => new AddExhibitConditionWindow(),
             TableId.Authors => new AddAuthorWindow(),
             TableId.Employees => new AddEmployeeWindow(),
-            TableId.Museum => new AddMuseumWindow(),
+            TableId.Museums => new AddMuseumWindow(),
             TableId.Branches => new AddBranchWindow(),
             TableId.Storages => new AddStorageWindow(),
             TableId.Collections => new AddCollectionWindow(),
@@ -79,7 +79,7 @@ public static class TableCrudService
             TableId.Shops => new AddShopWindow(),
             TableId.Companies => new AddCompanyWindow(),
             TableId.Products => new AddProductWindow(),
-            TableId.Inventory => new AddInventoryWindow(),
+            TableId.Inventories => new AddInventoryWindow(),
             _ => null
         };
 
@@ -105,7 +105,7 @@ public static class TableCrudService
             TableId.ExhibitConditions => new EditExhibitConditionWindow((ExhibitCondition)selected),
             TableId.Authors => new EditAuthorWindow((Author)selected),
             TableId.Employees => new EditEmployeeWindow((Employee)selected),
-            TableId.Museum => new EditMuseumWindow((Museum)selected),
+            TableId.Museums => new EditMuseumWindow((Museum)selected),
             TableId.Branches => new EditBranchWindow((Branch)selected),
             TableId.Storages => new EditStorageWindow((Storage)selected),
             TableId.Collections => new EditCollectionWindow((Collection)selected),
@@ -124,7 +124,7 @@ public static class TableCrudService
             TableId.Shops => new EditShopWindow((Shop)selected),
             TableId.Companies => new EditCompanyWindow((Company)selected),
             TableId.Products => new EditProductWindow((Product)selected),
-            TableId.Inventory => new EditInventoryWindow((Inventory)selected),
+            TableId.Inventories => new EditInventoryWindow((Inventory)selected),
             _ => null
         };
 

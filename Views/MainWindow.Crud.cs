@@ -1,5 +1,7 @@
 using System.Windows;
+using MuseumApp.Helpers;
 using MuseumApp.Navigation;
+using MuseumApp.Services;
 using MuseumApp.Services.Crud;
 
 namespace MuseumApp.Views;
@@ -11,25 +13,15 @@ public partial class MainWindow
         if (_currentTableId is not { } id)
             return;
 
-        switch (id)
+        if (TableCrudService.TryAdd(id, this))
         {
-            case TableId.Exhibitions: btn_add_exhibitions_Click(sender, e); break;
-            case TableId.Exhibits: btn_add_exhibits_Click(sender, e); break;
-            case TableId.Collections: btn_add_collections_Click(sender, e); break;
-            case TableId.Halls: btn_add_halls_Click(sender, e); break;
-            case TableId.Authors: btn_add_authors_Click(sender, e); break;
-            case TableId.Visitors: btn_add_visitors_Click(sender, e); break;
-            case TableId.ExhibitionTickets: btn_add_exhibitionTickets_Click(sender, e); break;
-            case TableId.ExcursionTickets: btn_add_excursionTickets_Click(sender, e); break;
-            case TableId.Excursions: btn_add_excursions_Click(sender, e); break;
-            case TableId.Privileges: btn_add_privileges_Click(sender, e); break;
-            case TableId.Employees: btn_add_employees_Click(sender, e); break;
-            case TableId.Events: btn_add_events_Click(sender, e); break;
-            default:
-                if (CrudRegistry.IsGeneric(id))
-                    GenericAdd();
-                break;
+            Load();
+            MessageBox.Show("Запись добавлена");
+            return;
         }
+
+        if (CrudRegistry.IsGeneric(id))
+            GenericAdd();
     }
 
     private void btnEdit_Click(object sender, RoutedEventArgs e)
@@ -37,25 +29,21 @@ public partial class MainWindow
         if (_currentTableId is not { } id)
             return;
 
-        switch (id)
+        if (dgMain.SelectedItem == null)
         {
-            case TableId.Exhibitions: btn_change_exhibitions_Click(sender, e); break;
-            case TableId.Exhibits: btn_change_exhibits_Click(sender, e); break;
-            case TableId.Collections: btn_change_collections_Click(sender, e); break;
-            case TableId.Halls: btn_change_halls_Click(sender, e); break;
-            case TableId.Authors: btn_change_authors_Click(sender, e); break;
-            case TableId.Visitors: btn_change_visitors_Click(sender, e); break;
-            case TableId.ExhibitionTickets: btn_change_exhibitionTickets_Click(sender, e); break;
-            case TableId.ExcursionTickets: btn_change_excursionTickets_Click(sender, e); break;
-            case TableId.Excursions: btn_change_excursions_Click(sender, e); break;
-            case TableId.Privileges: btn_change_privileges_Click(sender, e); break;
-            case TableId.Employees: btn_change_employees_Click(sender, e); break;
-            case TableId.Events: btn_change_events_Click(sender, e); break;
-            default:
-                if (CrudRegistry.IsGeneric(id))
-                    GenericEdit();
-                break;
+            MessageBox.Show("Выберите запись для изменения.");
+            return;
         }
+
+        if (TableCrudService.TryEdit(id, dgMain.SelectedItem, this))
+        {
+            Load();
+            MessageBox.Show("Запись изменена");
+            return;
+        }
+
+        if (CrudRegistry.IsGeneric(id))
+            GenericEdit();
     }
 
     private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -63,24 +51,36 @@ public partial class MainWindow
         if (_currentTableId is not { } id)
             return;
 
-        switch (id)
+        if (dgMain.SelectedItem == null)
         {
-            case TableId.Exhibitions: DelExhibition(); break;
-            case TableId.Exhibits: DelExhibit(); break;
-            case TableId.Collections: DelCollection(); break;
-            case TableId.Halls: DelHall(); break;
-            case TableId.Authors: DelAuthor(); break;
-            case TableId.Visitors: DelVisitor(); break;
-            case TableId.ExhibitionTickets: DelExhibitionTicket(); break;
-            case TableId.ExcursionTickets: DelExcursionTicket(); break;
-            case TableId.Excursions: DelExcursion(); break;
-            case TableId.Privileges: DelPrivilege(); break;
-            case TableId.Employees: DelEmployee(); break;
-            case TableId.Events: DelEvent(); break;
-            default:
-                if (CrudRegistry.IsGeneric(id))
-                    GenericDelete();
-                break;
+            MessageBox.Show("Выберите запись для удаления.");
+            return;
+        }
+
+        var result = MessageBox.Show(
+            "Удалить выбранную запись?",
+            "Подтверждение удаления",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (result != MessageBoxResult.Yes)
+            return;
+
+        try
+        {
+            if (TableDeleteService.Delete(id, dgMain.SelectedItem))
+            {
+                Load();
+                MessageBox.Show("Удалено");
+                return;
+            }
+
+            if (CrudRegistry.IsGeneric(id))
+                GenericDelete();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(DbExceptionHelper.GetMessage(ex), "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 }

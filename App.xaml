@@ -4,12 +4,10 @@
              xmlns:local="clr-namespace:MuseumApp"
              StartupUri="Views/LoginWindow.xaml">
     <Application.Resources>
-        <Style TargetType="Window">
-            <Setter Property="Width" Value="1600"/>
-            <Setter Property="Height" Value="900"/>
-            <Setter Property="MinWidth" Value="1600"/>
-            <Setter Property="MinHeight" Value="900"/>
-            <Setter Property="WindowStartupLocation" Value="CenterScreen"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes/MuseumTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
